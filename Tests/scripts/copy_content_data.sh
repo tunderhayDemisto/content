@@ -21,6 +21,12 @@ COPY_CONTENT_COMMAND="sudo unzip -o ~/content/content_new.zip -d /usr/local/demi
     && sudo unzip -o ~/content/content_test.zip -d /usr/local/demisto/res && sudo cp -r ~/Beta_Integrations/* /usr/local/demisto/res"
 ssh -t ${USER}@${PUBLIC_IP} ${COPY_CONTENT_COMMAND}
 
+# copy infrastructure test files
+ssh ${USER}@${PUBLIC_IP} 'mkdir ~/infrastructure_test_files'
+scp TestData/mock_test_files.zip ${USER}@${PUBLIC_IP}:~/infrastructure_test_files
+ssh -t ${USER}@${PUBLIC_IP} "sudo unzip -o ~/infrastructure_test_files/mock_test_files.zip -d ~/infrastructure_test_files/mock_test_files \
+    && sudo rm ~/infrastructure_test_files/mock_test_files.zip"
+
 echo "start server"
 
 START_SERVER_COMMAND="sudo systemctl start demisto"
