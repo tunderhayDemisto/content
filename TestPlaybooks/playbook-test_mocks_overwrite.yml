@@ -1,0 +1,129 @@
+id: 4adadebd-e0f0-4622-89ce-c71945279f20
+version: 4
+name: test mocks overwrite
+starttaskid: "0"
+tasks:
+  "0":
+    id: "0"
+    taskid: d2643672-64b9-4b49-80c9-ed22cde45b2a
+    type: start
+    task:
+      id: d2643672-64b9-4b49-80c9-ed22cde45b2a
+      version: -1
+      name: ""
+      iscommand: false
+      brand: ""
+    nexttasks:
+      '#none#':
+      - "1"
+    separatecontext: false
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+  "1":
+    id: "1"
+    taskid: 3a4f963c-920d-4fc5-8dc3-24a82d8babf2
+    type: regular
+    task:
+      id: 3a4f963c-920d-4fc5-8dc3-24a82d8babf2
+      version: -1
+      name: test-overwrite
+      script: Mock_test_integration|||test-overwrite
+      type: regular
+      iscommand: true
+      brand: Mock_test_integration
+    nexttasks:
+      '#none#':
+      - "2"
+    separatecontext: false
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 195
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+  "2":
+    id: "2"
+    taskid: 66003e15-4f99-4744-891b-e1a6cf5f36ac
+    type: condition
+    task:
+      id: 66003e15-4f99-4744-891b-e1a6cf5f36ac
+      version: -1
+      name: Verify Context
+      type: condition
+      iscommand: false
+      brand: ""
+    nexttasks:
+      "yes":
+      - "3"
+    separatecontext: false
+    conditions:
+    - label: "yes"
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: ${MockTest.message}
+            iscontext: true
+          right:
+            value:
+              simple: this is a response from the real instance
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 370
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+  "3":
+    id: "3"
+    taskid: dc859077-08bc-4912-8856-645032033924
+    type: title
+    task:
+      id: dc859077-08bc-4912-8856-645032033924
+      version: -1
+      name: Passed
+      type: title
+      iscommand: false
+      brand: ""
+    separatecontext: false
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 545
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+view: |-
+  {
+    "linkLabelsPosition": {
+      "2_3_yes": 0.54
+    },
+    "paper": {
+      "dimensions": {
+        "height": 560,
+        "width": 380,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
+inputs: []
+outputs: []
