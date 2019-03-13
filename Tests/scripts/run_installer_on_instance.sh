@@ -29,10 +29,6 @@ ssh ${USER}@${PUBLIC_IP} 'rm mitmproxy-4.0.4-linux.tar.gz'
 ssh ${USER}@${PUBLIC_IP} 'sudo chmod +x mitm*'
 ssh ${USER}@${PUBLIC_IP} 'sudo mv mitm* /usr/local/bin'
 
-# install npm and json-server
-ssh ${USER}@${PUBLIC_IP} 'sudo yum install npm'
-ssh ${USER}@${PUBLIC_IP} 'sudo npm install json-server'
-
 ssh ${USER}@${PUBLIC_IP} 'mkdir ~/content'
 ssh ${USER}@${PUBLIC_IP} 'mkdir ~/TestPlaybooks'
 ssh ${USER}@${PUBLIC_IP} 'mkdir ~/Beta_Integrations'
