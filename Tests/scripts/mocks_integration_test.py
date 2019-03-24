@@ -3,6 +3,8 @@ from subprocess import Popen, PIPE
 
 from Tests.mock_server import AMIConnection
 
+SERVER_CONFIG_FILE_PATH = 'mock_test_files/test.json'
+
 
 class JSONServer:
     def __init__(self, public_ip, config_file):
@@ -31,11 +33,18 @@ class JSONServer:
         self.process = None
 
 
+def run_mock_integration_test():
+    pass  # TODO: Continue here
+
+
 with open('./Tests/instance_ips.txt', 'r') as instance_file:
     instance_ips = instance_file.readlines()
     instance_ips = [line.strip('\n').split(":") for line in instance_ips]
-public_ip = instance_ips[0]
-mock_server = JSONServer(public_ip, config_file)
+public_ip = filter(lambda x: x[0] == "Demisto GA", instance_ips)[0][1]
+
+mock_server = JSONServer(public_ip, SERVER_CONFIG_FILE_PATH)
 mock_server.start()
+
+run_mock_integration_test()
 
 mock_server.stop()
