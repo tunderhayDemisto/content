@@ -211,20 +211,20 @@ def get_user_name_from_circle(circleci_token, build_number):
 
 def notify_failed_test(slack, circle_ci, playbook_id, build_number, inc_id, server_url, build_name):
     circle_user_name = get_user_name_from_circle(circle_ci, build_number)
-    sc = SlackClient(slack)
-    user_id = retrieve_id(circle_user_name, sc)
-
     text = "{0} - {1} Failed\n{2}".format(build_name, playbook_id, server_url) if inc_id == -1 \
         else "{0} - {1} Failed\n{2}/#/WorkPlan/{3}".format(build_name, playbook_id, server_url, inc_id)
 
-    if user_id:
-        sc.api_call(
-            "chat.postMessage",
-            channel=user_id,
-            username="Content CircleCI",
-            as_user="False",
-            text=text
-        )
+    if slack:
+        sc = SlackClient(slack)
+        user_id = retrieve_id(circle_user_name, sc)
+        if user_id:
+            sc.api_call(
+                "chat.postMessage",
+                channel=user_id,
+                username="Content CircleCI",
+                as_user="False",
+                text=text
+            )
 
 
 def retrieve_id(circle_user_name, sc):
