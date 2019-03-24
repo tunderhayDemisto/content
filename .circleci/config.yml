@@ -99,6 +99,12 @@ jobs:
                 ./Tests/lastest_server_build_scripts/wait_until_server_ready.sh
             fi
       - run:
+          name: Run Mock Integration Test
+          command: |
+            if ./Tests/scripts/is_ami.sh ;
+              then
+                python ./Tests/scripts/mocks_integration_test.py
+      - run:
           name: Run Tests - Latest GA
           shell: /bin/bash
           when: always
