@@ -3,8 +3,11 @@ import signal
 import sys
 from subprocess import Popen, PIPE
 
+import demisto
+
 from Tests.mock_server import AMIConnection, MITMProxy, get_mock_file_path, get_folder_path
 from Tests.test_content import run_test, options_handler, SERVER_URL
+
 
 SERVER_CONFIG_FILE_PATH = 'mock_test_files/test.json'
 PROXY_TMP_FOLDER = '/tmp/mock_integration_test_tmp'
