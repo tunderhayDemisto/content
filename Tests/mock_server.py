@@ -16,7 +16,8 @@ def clean_filename(playbook_id, whitelist=VALID_FILENAME_CHARS, replace=' ()'):
         filename = filename.replace(r, '_')
 
     # keep only valid ascii chars
-    cleaned_filename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore').decode()
+    if type(filename) is unicode:
+        cleaned_filename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore').decode()
 
     # keep only whitelisted chars
     cleaned_filename = ''.join(c for c in cleaned_filename if c in whitelist)

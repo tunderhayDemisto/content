@@ -14,9 +14,9 @@ PROXY_TMP_FOLDER = '/tmp/mock_integration_test_tmp'
 PROXY_REPO_FOLDER = '/tmp/mock_integration_test_repo'
 SERVER_PORT = '3000'
 TEST_TIMEOUT = 30
-TEST_PLAYBACK = u'test mocks playback'
-TEST_RECORDING = u'test mocks recording'
-TEST_OVERWRITE = u'test mocks overwrite'
+TEST_PLAYBACK = 'test mocks playback'
+TEST_RECORDING = 'test mocks recording'
+TEST_OVERWRITE = 'test mocks overwrite'
 
 
 class JSONServer:
