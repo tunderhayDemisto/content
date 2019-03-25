@@ -46,17 +46,8 @@ class JSONServer:
         self.process = None
 
 
-def run_mock_integration_test(playbook_id, public_ip, failed_playbooks):
-    options = options_handler()
-    username = options.user
-    password = options.password
-    slack = None
-    circle_ci = options.circleci
-    build_number = options.buildNumber
-    build_name = options.buildName
-    server = SERVER_URL.format(public_ip)
-    c = demisto.DemistoClient(None, server, username, password)
-    proxy = MITMProxy(c, public_ip, repo_folder=PROXY_REPO_FOLDER, tmp_folder=PROXY_TMP_FOLDER)
+def run_mock_integration_test(
+        playbook_id, failed_playbooks, c, proxy, slack, circle_ci, build_number, server, build_name):
 
     succeed_playbooks = []
     unmockable_integrations = {}
@@ -89,25 +80,28 @@ def copy_existing_mock_file(src, playbook_id, ami):
     ami.check_call(['cp', src, os.path.join(PROXY_REPO_FOLDER, get_mock_file_path(playbook_id))])
 
 
-def test_recording(public_ip, failed_playbooks, ami):
+def test_recording(public_ip, failed_playbooks, ami, c, proxy, slack, circle_ci, build_number, server, build_name):
     fpb_before_test = len(failed_playbooks)
-    run_mock_integration_test(TEST_RECORDING, public_ip, failed_playbooks)
+    run_mock_integration_test(TEST_RECORDING, public_ip, failed_playbooks,
+                              c, proxy, slack, circle_ci, build_number, server, build_name)
     return len(failed_playbooks) == fpb_before_test and validate_file(
         os.path.join(PROXY_TMP_FOLDER, get_mock_file_path(TEST_RECORDING)), 'record this', ami)
 
 
-def test_playback(public_ip, failed_playbooks, ami):
+def test_playback(public_ip, failed_playbooks, ami, c, proxy, slack, circle_ci, build_number, server, build_name):
     fpb_before_test = len(failed_playbooks)
     copy_existing_mock_file('mock_test_files/test_playback.mock', TEST_PLAYBACK, ami)
-    run_mock_integration_test(TEST_PLAYBACK, public_ip, failed_playbooks)
+    run_mock_integration_test(TEST_PLAYBACK, public_ip, failed_playbooks,
+                              c, proxy, slack, circle_ci, build_number, server, build_name)
     return len(failed_playbooks) == fpb_before_test and validate_file(
         os.path.join(PROXY_TMP_FOLDER, get_mock_file_path(TEST_PLAYBACK)), 'replay this', ami)
 
 
-def test_overwrite(public_ip, failed_playbooks, ami):
+def test_overwrite(public_ip, failed_playbooks, ami, c, proxy, slack, circle_ci, build_number, server, build_name):
     fpb_before_test = len(failed_playbooks)
     copy_existing_mock_file('mock_test_files/test_overwrite.mock', TEST_OVERWRITE, ami)
-    run_mock_integration_test(TEST_OVERWRITE, public_ip, failed_playbooks)
+    run_mock_integration_test(TEST_OVERWRITE, public_ip, failed_playbooks,
+                              c, proxy, slack, circle_ci, build_number, server, build_name)
     return len(failed_playbooks) == fpb_before_test and validate_file(
         os.path.join(PROXY_TMP_FOLDER, get_mock_file_path(TEST_OVERWRITE)),
         'this is a response from the real instance', ami)
@@ -129,23 +123,39 @@ def main():
     mock_server = JSONServer(public_ip, SERVER_CONFIG_FILE_PATH)
     mock_server.start()
 
-    failed_playbooks = []
-    succeeded_validations = {
-        TEST_PLAYBACK: test_playback(public_ip, failed_playbooks, ami),
-        TEST_RECORDING: test_recording(public_ip, failed_playbooks, ami),
-        TEST_OVERWRITE: test_overwrite(public_ip, failed_playbooks, ami),
-    }
+    try:
+        options = options_handler()
+        username = options.user
+        password = options.password
+        slack = None
+        circle_ci = options.circleci
+        build_number = options.buildNumber
+        build_name = options.buildName
+        server = SERVER_URL.format(public_ip)
+        c = demisto.DemistoClient(None, server, username, password)
+        proxy = MITMProxy(c, public_ip, repo_folder=PROXY_REPO_FOLDER, tmp_folder=PROXY_TMP_FOLDER)
 
-    for failed_playbook in failed_playbooks:
-        print 'Playbook {} test failed'.format(failed_playbook)
+        failed_playbooks = []
+        succeeded_validations = {
+            TEST_PLAYBACK: test_playback(public_ip, failed_playbooks, ami,
+                                         c, proxy, slack, circle_ci, build_number, server, build_name),
+            TEST_RECORDING: test_recording(public_ip, failed_playbooks, ami,
+                                           c, proxy, slack, circle_ci, build_number, server, build_name),
+            TEST_OVERWRITE: test_overwrite(public_ip, failed_playbooks, ami,
+                                           c, proxy, slack, circle_ci, build_number, server, build_name),
+        }
 
-    integration_test_success = True
-    for k, v in succeeded_validations:
-        if not v:
-            integration_test_success = False
-            print 'Playbook {} validation failed'.format(k)
+        for failed_playbook in failed_playbooks:
+            print 'Playbook {} test failed'.format(failed_playbook)
 
-    mock_server.stop()
+        integration_test_success = True
+        for k, v in succeeded_validations:
+            if not v:
+                integration_test_success = False
+                print 'Playbook {} validation failed'.format(k)
+
+    finally:
+        mock_server.stop()
 
     if not integration_test_success:
         sys.exit(1)
