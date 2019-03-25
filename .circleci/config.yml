@@ -104,6 +104,7 @@ jobs:
             if ./Tests/scripts/is_ami.sh ;
               then
                 python ./Tests/scripts/mocks_integration_test.py
+            fi
       - run:
           name: Run Tests - Latest GA
           shell: /bin/bash
