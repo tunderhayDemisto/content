@@ -128,6 +128,8 @@ def main():
     mock_server = JSONServer(public_ip, SERVER_CONFIG_FILE_PATH)
     mock_server.start()
 
+    ami.call(['mkdir', PROXY_REPO_FOLDER])
+
     failed_playbooks = []
     succeeded_validations = {
         TEST_PLAYBACK: test_playback(public_ip, failed_playbooks, ami),
