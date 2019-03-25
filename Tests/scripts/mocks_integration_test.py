@@ -85,7 +85,9 @@ def validate_file(file_under_test, validation_string, ami):
 
 
 def copy_existing_mock_file(src, playbook_id, ami):
-    ami.check_call(['cp', src, os.path.join(PROXY_REPO_FOLDER, get_folder_path(playbook_id))])
+    dst_folder = get_folder_path(playbook_id)
+    ami.call(['mkdir', '-p', dst_folder])
+    ami.check_call(['cp', src, os.path.join(PROXY_REPO_FOLDER, dst_folder)])
 
 
 def test_recording(public_ip, failed_playbooks, ami):
@@ -127,8 +129,6 @@ def main():
     ami = AMIConnection(public_ip)
     mock_server = JSONServer(public_ip, SERVER_CONFIG_FILE_PATH)
     mock_server.start()
-
-    ami.call(['mkdir', PROXY_REPO_FOLDER])
 
     failed_playbooks = []
     succeeded_validations = {
