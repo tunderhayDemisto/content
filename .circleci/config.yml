@@ -103,7 +103,7 @@ jobs:
           command: |
             if ./Tests/scripts/is_ami.sh ;
               then
-                python ./Tests/scripts/mocks_integration_test.py
+                ./Tests/scripts/run_mock_integration_test.sh
             fi
       - run:
           name: Run Tests - Latest GA
