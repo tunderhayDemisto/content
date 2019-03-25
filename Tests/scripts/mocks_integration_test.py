@@ -85,9 +85,8 @@ def validate_file(file_under_test, validation_string, ami):
 
 
 def copy_existing_mock_file(src, playbook_id, ami):
-    dst_folder = get_folder_path(playbook_id)
-    ami.call(['mkdir', '-p', dst_folder])
-    ami.check_call(['cp', src, os.path.join(PROXY_REPO_FOLDER, dst_folder)])
+    ami.call(['mkdir', '-p', os.path.join(PROXY_REPO_FOLDER, get_folder_path(playbook_id))])
+    ami.check_call(['cp', src, os.path.join(PROXY_REPO_FOLDER, get_mock_file_path(playbook_id))])
 
 
 def test_recording(public_ip, failed_playbooks, ami):
