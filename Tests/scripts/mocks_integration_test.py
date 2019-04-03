@@ -80,28 +80,28 @@ def copy_existing_mock_file(src, playbook_id, ami):
     ami.check_call(['cp', src, os.path.join(PROXY_REPO_FOLDER, get_mock_file_path(playbook_id))])
 
 
-def test_recording(public_ip, failed_playbooks, ami, c, proxy, slack, circle_ci, build_number, server, build_name):
+def test_recording(failed_playbooks, ami, c, proxy, slack, circle_ci, build_number, server, build_name):
     fpb_before_test = len(failed_playbooks)
-    run_mock_integration_test(TEST_RECORDING, public_ip, failed_playbooks,
-                              c, proxy, slack, circle_ci, build_number, server, build_name)
+    run_mock_integration_test(TEST_RECORDING, failed_playbooks, c, proxy, slack, circle_ci, build_number, server,
+                              build_name)
     return len(failed_playbooks) == fpb_before_test and validate_file(
         os.path.join(PROXY_TMP_FOLDER, get_mock_file_path(TEST_RECORDING)), 'record this', ami)
 
 
-def test_playback(public_ip, failed_playbooks, ami, c, proxy, slack, circle_ci, build_number, server, build_name):
+def test_playback(failed_playbooks, ami, c, proxy, slack, circle_ci, build_number, server, build_name):
     fpb_before_test = len(failed_playbooks)
     copy_existing_mock_file('mock_test_files/test_playback.mock', TEST_PLAYBACK, ami)
-    run_mock_integration_test(TEST_PLAYBACK, public_ip, failed_playbooks,
-                              c, proxy, slack, circle_ci, build_number, server, build_name)
+    run_mock_integration_test(TEST_PLAYBACK, failed_playbooks, c, proxy, slack, circle_ci, build_number, server,
+                              build_name)
     return len(failed_playbooks) == fpb_before_test and validate_file(
         os.path.join(PROXY_TMP_FOLDER, get_mock_file_path(TEST_PLAYBACK)), 'replay this', ami)
 
 
-def test_overwrite(public_ip, failed_playbooks, ami, c, proxy, slack, circle_ci, build_number, server, build_name):
+def test_overwrite(failed_playbooks, ami, c, proxy, slack, circle_ci, build_number, server, build_name):
     fpb_before_test = len(failed_playbooks)
     copy_existing_mock_file('mock_test_files/test_overwrite.mock', TEST_OVERWRITE, ami)
-    run_mock_integration_test(TEST_OVERWRITE, public_ip, failed_playbooks,
-                              c, proxy, slack, circle_ci, build_number, server, build_name)
+    run_mock_integration_test(TEST_OVERWRITE, failed_playbooks, c, proxy, slack, circle_ci, build_number, server,
+                              build_name)
     return len(failed_playbooks) == fpb_before_test and validate_file(
         os.path.join(PROXY_TMP_FOLDER, get_mock_file_path(TEST_OVERWRITE)),
         'this is a response from the real instance', ami)
@@ -137,12 +137,12 @@ def main():
 
         failed_playbooks = []
         succeeded_validations = {
-            TEST_PLAYBACK: test_playback(public_ip, failed_playbooks, ami,
-                                         c, proxy, slack, circle_ci, build_number, server, build_name),
-            TEST_RECORDING: test_recording(public_ip, failed_playbooks, ami,
-                                           c, proxy, slack, circle_ci, build_number, server, build_name),
-            TEST_OVERWRITE: test_overwrite(public_ip, failed_playbooks, ami,
-                                           c, proxy, slack, circle_ci, build_number, server, build_name),
+            TEST_PLAYBACK: test_playback(failed_playbooks, ami, c, proxy, slack, circle_ci, build_number, server,
+                                         build_name),
+            TEST_RECORDING: test_recording(failed_playbooks, ami, c, proxy, slack, circle_ci, build_number, server,
+                                           build_name),
+            TEST_OVERWRITE: test_overwrite(failed_playbooks, ami, c, proxy, slack, circle_ci, build_number, server,
+                                           build_name)
         }
 
         for failed_playbook in failed_playbooks:
