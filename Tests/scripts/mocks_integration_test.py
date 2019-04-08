@@ -7,7 +7,7 @@ import demisto
 
 from Tests.mock_server import AMIConnection, MITMProxy, get_mock_file_path, get_folder_path
 from Tests.test_content import run_test, options_handler, SERVER_URL
-
+from Tests.test_utils import print_error
 
 SERVER_CONFIG_FILE_PATH = 'mock_test_files/test.json'
 PROXY_TMP_FOLDER = '/tmp/mock_integration_test_tmp'
@@ -132,7 +132,13 @@ def main():
         build_number = options.buildNumber
         build_name = options.buildName
         server = SERVER_URL.format(public_ip)
+
         c = demisto.DemistoClient(None, server, username, password)
+        res = c.Login()
+        if res.status_code != 200:
+            print_error("Login has failed with status code " + str(res.status_code))
+            sys.exit(1)
+
         proxy = MITMProxy(c, public_ip, repo_folder=PROXY_REPO_FOLDER, tmp_folder=PROXY_TMP_FOLDER)
 
         failed_playbooks = []
