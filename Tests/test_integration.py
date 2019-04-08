@@ -26,6 +26,11 @@ def __get_integration_config(client, integration_name):
     })
 
     res = res.json()
+    # DEBUG
+    if 'configurations' not in res:
+        print str(res)
+        exit(1)
+    # END DEBUG
     all_configurations = res['configurations']
     match_configurations = [x for x in all_configurations if x['name'] == integration_name]
 
