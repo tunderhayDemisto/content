@@ -2,6 +2,7 @@ commonfields:
   id: CommonServerPython
   version: -1
 name: CommonServerPython
+fromversion: 4.5.0
 script: |-
   # Common functions script
   # =======================
@@ -1537,7 +1538,5 @@ system: true
 scripttarget: 0
 dependson: {}
 timeout: 0s
-releaseNotes: "Logger support for Python3."
 tests:
-  - TestPYCommonServer
-releaseNotes: "-"
+  - TestCommonPython
