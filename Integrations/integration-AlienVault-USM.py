@@ -14,9 +14,6 @@ API_VERSION = '2.0'
 URL = HOST + '/api/' + API_VERSION
 
 
-GET_ALARM_BY_ID_PAYLOAD = '{"page": 1,"size": 20,"find": {"alarm.suppressed": ["false"]},"sort": {"alarm.timestamp_occured": "desc"},"range": {"alarm.timestamp_occured":"gte": "now-7d","lte": "now","timeZone": "-0500"}}}'
-
-
 
 def get_token():
     basicauth_credentials = (CLIENT_ID, SECRET)
@@ -32,17 +29,49 @@ def get_token():
         res = json.loads(response.text)
         return res['access_token']
 
+def parse_alarm(alarm_data):
+    return {
+        'Alarm.ID': alarm_data['uuid'],
+        'Alarm.Priority': alarm_data['priority_label'],
+        'Alarm.DestinationAsset': alarm_data['destinations'][0]['address'],
+        'Alarm.RuleAttackId': alarm_data['rule_attack_id'],
+        'Alarm.RuleAttackTactic': alarm_data['rule_attack_tactic'][0],
+        'Alarm.RuleAttackTechnique': alarm_data['rule_attack_technique'],
+        "Alarm.Sensor": alarm_data['events'][0]['received_from'],
+        'Alarm.Source.IpAddress': alarm_data['destinations'][0]['address'],
+        'Alarm.Source.Organization': alarm_data['sources'][0]['organisation'],
+        'Alarm.Source.Country': alarm_data['sources'][0]['country'],
+        'Alarm.Destination.IpAddress': alarm_data['destinations'][0]['address'],
+        'Alarm.Destination.FQDN': alarm_data['destinations'][0]['fqdn']
+    }
+
+def parse_alarms(alarms_data):
+    alarms = []
+    for alarm in alarms_data['_embedded']['alarms']:
+        tmp = {
+            'Alarm.ID': alarm['uuid'],
+            'Alarm.Priority': alarm['priority_label'],
+            'Alarm.DestinationAsset': alarm['events'][0]['message']['destination_address'],
+            'Alarm.RuleAttackId': alarm['rule_attack_id'],
+            'Alarm.RuleAttackTactic': alarm['rule_attack_tactic'][0],
+            'Alarm.RuleAttackTechnique': alarm['rule_attack_technique'],
+            "Alarm.Sensor": alarm['events'][0]['message']['received_from'],
+            'Alarm.Source.IpAddress': alarm['events'][0]['message']['source_address'],
+            'Alarm.Source.Organization': alarm['events'][0]['message']['source_organisation'],
+            'Alarm.Source.Country': alarm['events'][0]['message']['source_country'],
+            'Alarm.Destination.IpAddress': alarm['events'][0]['message']['destination_address'],
+            'Alarm.Destination.FQDN': alarm['events'][0]['message']['destination_fqdn'],
+        }
+        alarms.append(tmp)
+    return alarms
 
 def get_alarm_by_id(alarm_id):
-
     auth_token = get_token()
-
     hed = {'Authorization': 'Bearer ' + auth_token}
-
     url = URL + '/alarms/' + alarm_id
 
     try:
-        response = requests.get(url, headers=hed, data=GET_ALARM_BY_ID_PAYLOAD)
+        response = requests.get(url, headers=hed)
     except Exception:
         raise Exception('request failed')
 
@@ -55,32 +84,39 @@ def get_alarm_by_id(alarm_id):
     if response.status_code == 200:
         res = json.loads(response.text)
 
-        alarm = {
-            'Alarm.ID' : alarm_id,
-            'Alarm.Priority' : res['priority'],
-            'Alarm.Status': '',
-            'Alarm.EventName': res['event_name'],
-            'Alarm.Action': res['event_action'],
-            'Alarm.BaseEventCount' : res['base_event_count'],
-            'Alarm.RuleAttackId' : res['rule_attack_id'],
-            'Alarm.RuleAttackTactic' : res['rule_attack_tactic'],
-            'Alarm.RuleAttackTechnique' : res['rule_attack_technique'],
-            'Alarm.Sensor' : '',
-            'Source.IpAddress' : res['sources'][0]['address'],
-            'Source.Organization' : res['sources'][0]['organisation'],
-            'Source.Country' : res['sources'][0]['country'],
-        }
+        alarm_context = parse_alarm(res)
 
-        alarm_context = dict(alarm)
+        print alarm_context
+        return  alarm_context
+
+def get_alarms():
+    auth_token = get_token()
+    hed = {'Authorization': 'Bearer ' + auth_token}
+    url = URL + '/alarms/'
+
+    try:
+        response = requests.get(url, headers=hed)
+    except Exception:
+        raise Exception('request failed')
+
+    if response.status_code == 401:
+        raise Exception('invalid token')
+
+    if response.status_code == 404:
+        raise Exception('alarm could not be found')
+
+    if response.status_code == 200:
+        res = json.loads(response.text)
+
+        alarm_context = parse_alarms(res)
 
         print alarm_context
         return  alarm_context
 
 
 
-
-
-get_alarm_by_id('51d9ff5d-ff00-7e30-322c-8687f6a51052')
+get_alarm_by_id('d8689007-30b1-ae32-f4b2-f5f2b553ac14')
+get_alarms()
 
 sys.exit(0)
 
