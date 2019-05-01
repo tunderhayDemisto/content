@@ -1236,12 +1236,14 @@ script:
   - arguments:
     - default: false
       description: (Int) ID of the fileCatalog entry for which analysis is requested.
+        This value can be fetched via cbp-fileCatalog-search command.
       isArray: false
       name: fileCatalogId
       required: true
       secret: false
     - default: false
-      description: (Int) ID of the target connector for the analysis.
+      description: (Int) ID of the target connector for the analysis. This value can
+        be fetched via cbp-connector-search command.
       isArray: false
       name: connectorId
       required: true
@@ -1249,7 +1251,8 @@ script:
     - default: false
       defaultValue: '0'
       description: (Int) ID of the computer from which to upload the file. If "0",
-        the system will identify the best computer from which to get the file.
+        the system will identify the best computer from which to get the file. This
+        value can be fetched via cbp-computer-search command.
       isArray: false
       name: computerId
       required: false
@@ -1458,14 +1461,16 @@ script:
     name: cbp-fileUpload-download
   - arguments:
     - default: false
-      description: (Int) ID of the fileCatalog entry for file to upload.
+      description: (Int) ID of the fileCatalog entry for file to upload. This value
+        can be fetched via cbp-fileCatalog-search command.
       isArray: false
       name: fileCatalogId
       required: true
       secret: false
     - default: false
       defaultValue: '0'
-      description: (Int) ID of the computer entry associated with this analysis.
+      description: (Int) ID of the computer entry associated with this analysis. This
+        value can be fetched via cbp-computer-search command.
       isArray: false
       name: computerId
       required: false
@@ -1987,7 +1992,8 @@ script:
       secret: false
     - default: false
       description: (Int) ID of the fileCatalog entry associated with this fileRule.
-        Can be "0" if creating or modifying the rule based on the hash or file name.`
+        Can be "0" if creating or modifying the rule based on the hash or file name.
+        This value can be fetched via cbp-fileCatalog-search command.
       isArray: false
       name: fileCatalogId
       required: false
