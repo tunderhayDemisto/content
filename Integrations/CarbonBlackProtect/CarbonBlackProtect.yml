@@ -58,7 +58,7 @@ script:
       required: false
       secret: false
     - default: false
-      description: '(Int32) Is maximum number of results to retrieve. If not specified:
+      description: '(Int) Is maximum number of results to retrieve. If not specified:
         First 1000 results will be returned. If set to -1: Only result count will
         be returned, without actual results. Offset parameter is ignored in this case.
         If set to 0: All results will be returned. Offset parameter is ignored in
@@ -70,7 +70,7 @@ script:
       required: false
       secret: false
     - default: false
-      description: (Int32) Offset in data set
+      description: (Int) Offset in data set
       isArray: false
       name: offset
       required: false
@@ -132,8 +132,8 @@ script:
         is any valid field in the object that is being queried. Operator (: LIKE,
         ! NOT LIKE, < Less than, > Greater than, + logical AND, - logical OR, | separating
         values) is any of valid operators (see below). All operators consist of a
-        single character. Value is compared with an operator and depends on field type.
-        See more: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#searching'
+        single character. Value is compared with an operator and depends on field
+        type. See more: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#searching'
       isArray: false
       name: query
       required: false
@@ -160,45 +160,23 @@ script:
       required: false
       secret: false
     - default: false
-      description: 'Maximum number of results to retrieve (Int32). If not specified,
-        the first 1000 results will be returned. If set to "-1", only the result count will
-        be returned, without actual results, and the Offset parameter is ignored.
-        If set to "0", all results will be returned, and the Offset parameter is ignored. Some result sets might be very large, resulting in query
-        timeout. Therefore, unless you know that query will not return more than 1000
-        results, it is recommended to retrieve data in chunks using offset and limit.'
+      description: Maximum number of results to retrieve (Int). If not specified,
+        the first 1000 results will be returned. If set to "-1", only the result count
+        will be returned, without actual results, and the Offset parameter is ignored.
+        If set to "0", all results will be returned, and the Offset parameter is ignored.
+        Some result sets might be very large, resulting in query timeout. Therefore,
+        unless you know that query will not return more than 1000 results, it is recommended
+        to retrieve data in chunks using offset and limit.
       isArray: false
       name: limit
       required: false
       secret: false
     deprecated: false
-    description: 'Search for computers. For more information, see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#computer'
+    description: 'Search for computers. For more information, see the Carbon Black
+      documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#computer'
     execution: false
     name: cbp-computer-search
     outputs:
-    - contextPath: Endpoint.Processors
-      description: The number of processors.
-      type: Number
-    - contextPath: Endpoint.MACAddress
-      description: MAC address of the endpoint.
-      type: String
-    - contextPath: Endpoint.Model
-      description: The machine model, if available.
-      type: String
-    - contextPath: Endpoint.IPAddress
-      description: The IP address of the endpoint.
-      type: String
-    - contextPath: Endpoint.Processor
-      description: The model of the processor.
-      type: String
-    - contextPath: Endpoint.Hostname
-      description: Hostname of the endpoint.
-      type: String
-    - contextPath: Endpoint.OSVersion
-      description: The full OS name for the endpoint.
-      type: String
-    - contextPath: Endpoint.ID
-      description: The unique ID within the tool retreiving the endpoint.
-      type: String
     - contextPath: Endpoint.OS
       description: The short OS name running on the endpoint.
       type: String
@@ -207,7 +185,7 @@ script:
       type: Number
   - arguments:
     - default: true
-      description: (Int32) Unique computer ID.
+      description: (Int) Unique computer ID.
       isArray: false
       name: id
       required: true
@@ -231,7 +209,7 @@ script:
       required: false
       secret: false
     - default: false
-      description: (Int32) New ID of the policy for this computer. PolicyId is ignored
+      description: (Int) New ID of the policy for this computer. PolicyId is ignored
         if either automaticPolicy is "True" or localApproval is "True".
       isArray: false
       name: policyId
@@ -260,7 +238,7 @@ script:
       required: false
       secret: false
     - default: false
-      description: '(Int32) Change refresh flags for this agent. Can be a combination
+      description: '(Int) Change refresh flags for this agent. Can be a combination
         of: 0x01=Complete resynch of agent NAB and installer table is requested 0x02=Rescan
         of programs installed on the computer is requested 0x20=Tell agent to refresh
         config list 0x40=Force this agent to reregister with new cookie 0x200=Trigger
@@ -282,61 +260,61 @@ script:
       required: false
       secret: false
     - default: false
-      description: (Int32) Current debug level of the agent. Range is from 0 (none) to
-        8 (verbose). This value can be changed only if the "changeDiagnostics" request
-        parameter is set to "True".
+      description: (Int) Current debug level of the agent. Range is from 0 (none)
+        to 8 (verbose). This value can be changed only if the "changeDiagnostics"
+        request parameter is set to "True".
       isArray: false
       name: debugLevel
       required: false
       secret: false
     - default: false
-      description: (Int32) Current kernel debug level of the agent. Range is from 0 (none)
-        to 5 (verbose). This value can be changed only if the "changeDiagnostics" request
-        parameter is set to "True".
+      description: (Int) Current kernel debug level of the agent. Range is from 0
+        (none) to 5 (verbose). This value can be changed only if the "changeDiagnostics"
+        request parameter is set to "True".
       isArray: false
       name: kernelDebugLevel
       required: false
       secret: false
     - default: false
-      description: '(Int32) Debug flags. Can be 0 or combination of: 0x01 = Upload
-        debug files now 0x10 = Enable full memory dumps 0x20 = Copy agent cache 0x40
-        = Delete debug files 0x80 = Upload agent cache 0x200 = Save verbose debug
-        info + counters to the cache when copied/uploaded 0x400 = Generate and upload
-        an analysis.bt9 file that contains various constraint violation analysis information
-        0x800 = Run a health check and send results to server. This value can be changed
+      description: '(Int) Debug flags. Can be 0 or combination of: 0x01 = Upload debug
+        files now 0x10 = Enable full memory dumps 0x20 = Copy agent cache 0x40 = Delete
+        debug files 0x80 = Upload agent cache 0x200 = Save verbose debug info + counters
+        to the cache when copied/uploaded 0x400 = Generate and upload an analysis.bt9
+        file that contains various constraint violation analysis information 0x800
+        = Run a health check and send results to server. This value can be changed
         only if the "changeDiagnostics" request parameter is set to "True".'
       isArray: false
       name: debugFlags
       required: false
       secret: false
     - default: false
-      description: (Int32) Debug duration in minutes. This value can be changed only
+      description: (Int) Debug duration in minutes. This value can be changed only
         if the "changeDiagnostics" request parameter is set to "True".
       isArray: false
       name: debugDuration
       required: false
       secret: false
     - default: false
-      description: '(Int32) Cache consistency check level set for the agent. Can be one
-        of: 0 = None 1 = Quick verification 2 = Rescan known files Full scan for new
-        files. This value can be changed only if the "changeDiagnostics" request parameter
-        is set to "True".'
+      description: '(Int) Cache consistency check level set for the agent. Can be
+        one of: 0 = None 1 = Quick verification 2 = Rescan known files Full scan for
+        new files. This value can be changed only if the "changeDiagnostics" request
+        parameter is set to "True".'
       isArray: false
       name: cCLevel
       required: false
       secret: false
     - default: false
-      description: '(Int32) Cache consistency check flags set for agent. Can be 0
-        or combination of: 0x0001 = Whether this is just a test run or not 0x0002
-        = Should the state of invalid files be preserved 0x0004 = Should new files
-        found be locally approved or not 0x0008 = Should we re-evaluate whether a
-        file’s certificate information is still valid or not 0x0010 = Whether the
-        check was scheduled or not 0x0020 = Whether the agent should run constraint
-        checks to test for invalid results 0x0040 = Whether we are only searching
-        for new script types as a result of a change to what ‘IsScript’ means 0x0080
-        = Whether we are doing a level 3 check for initialization 0x0100 = This cache
-        check is to remediate CR# 18041 0x0200 = Force the re-evaluation of the IsCrawlable
-        state and archive type.'
+      description: '(Int) Cache consistency check flags set for agent. Can be 0 or
+        combination of: 0x0001 = Whether this is just a test run or not 0x0002 = Should
+        the state of invalid files be preserved 0x0004 = Should new files found be
+        locally approved or not 0x0008 = Should we re-evaluate whether a file’s certificate
+        information is still valid or not 0x0010 = Whether the check was scheduled
+        or not 0x0020 = Whether the agent should run constraint checks to test for
+        invalid results 0x0040 = Whether we are only searching for new script types
+        as a result of a change to what ‘IsScript’ means 0x0080 = Whether we are doing
+        a level 3 check for initialization 0x0100 = This cache check is to remediate
+        CR# 18041 0x0200 = Force the re-evaluation of the IsCrawlable state and archive
+        type.'
       isArray: false
       name: cCFlags
       required: false
@@ -353,8 +331,8 @@ script:
       secret: false
     - auto: PREDEFINED
       default: false
-      description: (Boolean) "True" if the computer is a VDI template. This value can be
-        changed only if the "changeTemplate" request parameter is set to "True".
+      description: (Boolean) "True" if the computer is a VDI template. This value
+        can be changed only if the "changeTemplate" request parameter is set to "True".
       isArray: false
       name: template
       predefined:
@@ -365,7 +343,7 @@ script:
     - auto: PREDEFINED
       default: false
       description: |-
-        (Int32) Mode of template cleanup. Can be one of:
+        (Int) Mode of template cleanup. Can be one of:
         1=Manual (from console)
         2=Automatic, by time (specified by templateCloneCleanupTime and templateCloneCleanupTimeScale)
         3=Automatic, when new computer with the same name comes online
@@ -381,10 +359,10 @@ script:
       required: false
       secret: false
     - default: false
-      description: (Int32) If the templateCloneCleanupMode value is "2", this is the time before clone
-                     is cleaned up. Time unit is specified in templateCloneCleanupTimeScale. This
-                     value can be changed only if the "changeTemplate" request parameter is set to
-                     "True".
+      description: (Int) If the templateCloneCleanupMode value is "2", this is the
+        time before clone is cleaned up. Time unit is specified in templateCloneCleanupTimeScale.
+        This value can be changed only if the "changeTemplate" request parameter is
+        set to "True".
       isArray: false
       name: templateCloneCleanupTime
       required: false
@@ -392,7 +370,7 @@ script:
     - auto: PREDEFINED
       default: false
       description: |-
-        (Int32) Time unit of the template cleanup. Can be one of:
+        (Int) Time unit of the template cleanup. Can be one of:
         1=Hours
         2=Days
         3=Weeks
@@ -408,8 +386,8 @@ script:
     - auto: PREDEFINED
       default: false
       description: (Boolean) If "True", clones of this template will track only new
-        and modified files. This value can be changed only if the "changeTemplate" request
-        parameter is set to "True".
+        and modified files. This value can be changed only if the "changeTemplate"
+        request parameter is set to "True".
       isArray: false
       name: templateTrackModsOnly
       predefined:
@@ -418,17 +396,17 @@ script:
       required: false
       secret: false
     - default: false
-      description: (Boolean) If "True", debug
-        and CC properties of the computer will be updated from the object sent in the
-        body the request. This action requires "Change advanced options" permission. Default is "False".
+      description: (Boolean) If "True", debug and CC properties of the computer will
+        be updated from the object sent in the body the request. This action requires
+        "Change advanced options" permission. Default is "False".
       isArray: false
       name: changeDiagnostics
       required: false
       secret: false
     - default: false
-      description: (Boolean) If set to true, template
-        settings will be updated from the object sent in the body the request. This
-        action requires "Change advanced options" permission. Default is "False".
+      description: (Boolean) If set to true, template settings will be updated from
+        the object sent in the body the request. This action requires "Change advanced
+        options" permission. Default is "False".
       isArray: false
       name: changeTemplate
       required: false
@@ -445,8 +423,8 @@ script:
       secret: false
     - auto: PREDEFINED
       default: false
-      description: (Boolean) Reset the CLI password for this computer.
-        This action requires "Change advanced options" permission.
+      description: (Boolean) Reset the CLI password for this computer. This action
+        requires "Change advanced options" permission.
       isArray: false
       name: resetCLIPassword
       predefined:
@@ -456,34 +434,11 @@ script:
       secret: false
     deprecated: false
     description: 'Updates computer objects. Note that some computer properties can
-      be changed only if specific boolean parameters are set. For more information, see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#computer'
+      be changed only if specific boolean parameters are set. For more information,
+      see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#computer'
     execution: false
     name: cbp-computer-update
     outputs:
-    - contextPath: Endpoint.Processors
-      description: The number of processors.
-      type: Number
-    - contextPath: Endpoint.MACAddress
-      description: MAC address of the endpoint.
-      type: String
-    - contextPath: Endpoint.Model
-      description: The machine model, if available.
-      type: String
-    - contextPath: Endpoint.IPAddress
-      description: IP address of the endpoint.
-      type: String
-    - contextPath: Endpoint.Processor
-      description: Model of the processor.
-      type: String
-    - contextPath: Endpoint.Hostname
-      description: Hostname of the endpoint.
-      type: String
-    - contextPath: Endpoint.OSVersion
-      description: The full OS name running on the endpoint.
-      type: String
-    - contextPath: Endpoint.ID
-      description: The unique ID within the tool retreiving the endpoint.
-      type: String
     - contextPath: Endpoint.Processors
       description: The number of processors.
       type: Number
@@ -513,40 +468,17 @@ script:
       type: String
   - arguments:
     - default: true
-      description: (Int32) Unique computer ID.
+      description: (Int) Unique computer ID.
       isArray: false
       name: id
       required: true
       secret: false
     deprecated: false
-    description: 'Returns information for a computer. For more information, see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#computer'
+    description: 'Returns information for a computer. For more information, see the
+      Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#computer'
     execution: false
     name: cbp-computer-get
     outputs:
-    - contextPath: Endpoint.Processors
-      description: The number of processors.
-      type: Number
-    - contextPath: Endpoint.MACAddress
-      description: MAC address of the endpoint.
-      type: String
-    - contextPath: Endpoint.Model
-      description: The machine model, if available.
-      type: String
-    - contextPath: Endpoint.IPAddress
-      description: IP address of the endpoint.
-      type: String
-    - contextPath: Endpoint.Processor
-      description: The model of the processor.
-      type: String
-    - contextPath: Endpoint.Hostname
-      description: Hostname of the endpoint.
-      type: String
-    - contextPath: Endpoint.OSVersion
-      description: The full OS name running on the endpoint.
-      type: String
-    - contextPath: Endpoint.ID
-      description: The unique ID within the tool retreiving the endpoint.
-      type: String
     - contextPath: Endpoint.Processors
       description: The number of processors.
       type: Number
@@ -587,17 +519,19 @@ script:
       required: false
       secret: false
     - default: false
-      description: '(Int32) Maximum number of results to retrieve. If not specified the first 1000 results will be returned. If set to "-1", only the result count will
-        be returned, without actual results, and the "offset" parameter is ignored.
-        If set to "0", all results will be returned, and the "offset" parameter is ignored. Note that some result sets might be very large, resulting in query
+      description: (Int) Maximum number of results to retrieve. If not specified the
+        first 1000 results will be returned. If set to "-1", only the result count
+        will be returned, without actual results, and the "offset" parameter is ignored.
+        If set to "0", all results will be returned, and the "offset" parameter is
+        ignored. Note that some result sets might be very large, resulting in query
         timeout. Therefore, unless you know that query will not return more than 1000
-        results, it is recommended to retrieve data in chunks using offset and limit.'
+        results, it is recommended to retrieve data in chunks using offset and limit.
       isArray: false
       name: limit
       required: false
       secret: false
     - default: false
-      description: (Int32) Offset in the data set.
+      description: (Int) Offset in the data set.
       isArray: false
       name: offset
       required: false
@@ -610,14 +544,16 @@ script:
       required: false
       secret: false
     - default: false
-      description: 'Sorting is optional and can be defined with a single attribute, where xyz is the field name from the result set:
-        &sort=xyz [ASC|DESC]. There can be only one sorting field. Default sort order is ascending (ASC). '
+      description: 'Sorting is optional and can be defined with a single attribute,
+        where xyz is the field name from the result set: &sort=xyz [ASC|DESC]. There
+        can be only one sorting field. Default sort order is ascending (ASC). '
       isArray: false
       name: sort
       required: false
       secret: false
     deprecated: false
-    description: 'Search for file instances. For more information, see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#fileinstance'
+    description: 'Search for file instances. For more information, see the Carbon
+      Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#fileinstance'
     execution: false
     name: cbp-fileInstance-search
     outputs:
@@ -649,17 +585,19 @@ script:
       required: false
       secret: false
     - default: false
-      description: '(Int32) Maximum number of results to retrieve. If not specified, the first 1000 results will be returned. If set to "-1", only the result count will
-        be returned, without actual results, and the "offset" parameter is ignored.
-        If set to "0", all results will be returned, and the "offset" parameter is ignored. Note that some result sets might be very large, resulting in query
+      description: (Int) Maximum number of results to retrieve. If not specified,
+        the first 1000 results will be returned. If set to "-1", only the result count
+        will be returned, without actual results, and the "offset" parameter is ignored.
+        If set to "0", all results will be returned, and the "offset" parameter is
+        ignored. Note that some result sets might be very large, resulting in query
         timeout. Therefore, unless you know that query will not return more than 1000
-        results, it is recommended to retrieve data in chunks using offset and limit.'
+        results, it is recommended to retrieve data in chunks using offset and limit.
       isArray: false
       name: limit
       required: false
       secret: false
     - default: false
-      description: (Int32) Offset in the data set.
+      description: (Int) Offset in the data set.
       isArray: false
       name: offset
       required: false
@@ -672,14 +610,16 @@ script:
       required: false
       secret: false
     - default: false
-      description: 'Sorting is optional and can be defined with a single attribute, where xyz is field name from the result set:
-        &sort=xyz [ASC|DESC]. There can be only one sorting field. Default sort order is ascending (ASC). '
+      description: 'Sorting is optional and can be defined with a single attribute,
+        where xyz is field name from the result set: &sort=xyz [ASC|DESC]. There can
+        be only one sorting field. Default sort order is ascending (ASC). '
       isArray: false
       name: sort
       required: false
       secret: false
     deprecated: false
-    description: 'Search for events. For more information, see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#event'
+    description: 'Search for events. For more information, see the Carbon Black documentation:
+      https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#event'
     execution: false
     name: cbp-event-search
     outputs:
@@ -774,17 +714,19 @@ script:
       required: false
       secret: false
     - default: false
-      description: '(Int32) Maximum number of results to retrieve. If not specified, the first 1000 results will be returned. If set to "-1", only the result count will
-        be returned, without actual results, and the "offset" parameter is ignored.
-        If set to "0", all results will be returned, and the "offset" parameter is ignored. Note that some result sets might be very large, resulting in query
+      description: (Int) Maximum number of results to retrieve. If not specified,
+        the first 1000 results will be returned. If set to "-1", only the result count
+        will be returned, without actual results, and the "offset" parameter is ignored.
+        If set to "0", all results will be returned, and the "offset" parameter is
+        ignored. Note that some result sets might be very large, resulting in query
         timeout. Therefore, unless you know that query will not return more than 1000
-        results, it is recommended to retrieve data in chunks using offset and limit.'
+        results, it is recommended to retrieve data in chunks using offset and limit.
       isArray: false
       name: limit
       required: false
       secret: false
     - default: false
-      description: (Int32) Offset in the data set.
+      description: (Int) Offset in the data set.
       isArray: false
       name: offset
       required: false
@@ -797,15 +739,16 @@ script:
       required: false
       secret: false
     - default: false
-      description: 'Sorting is optional and can be defined with a single attribute, where xyz is field name from the result set:
-        &sort=xyz [ASC|DESC]. There can be only one sorting field. Default sort order
-        is ascending (ASC). '
+      description: 'Sorting is optional and can be defined with a single attribute,
+        where xyz is field name from the result set: &sort=xyz [ASC|DESC]. There can
+        be only one sorting field. Default sort order is ascending (ASC). '
       isArray: false
       name: sort
       required: false
       secret: false
     deprecated: false
-    description: 'Search for approval requests. For more information, see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#approvalrequest'
+    description: 'Search for approval requests. For more information, see the Carbon
+      Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#approvalrequest'
     execution: false
     name: cbp-approvalRequest-search
     outputs:
@@ -839,9 +782,9 @@ script:
       description: User that created this notifier.
       type: String
     - contextPath: CBP.ApprovalRequest.EnforcementLevel
-      description: 'Enforcement level of the agent at the time of the request. Can be one
-        of: 20=High (Block Unapproved), 30=Medium (Prompt Unapproved), 40=Low (Monitor
-        Unapproved), 60=None (Visibility), 80=None (Disabled).'
+      description: 'Enforcement level of the agent at the time of the request. Can
+        be one of: 20=High (Block Unapproved), 30=Medium (Prompt Unapproved), 40=Low
+        (Monitor Unapproved), 60=None (Visibility), 80=None (Disabled).'
       type: Number
     - contextPath: CBP.ApprovalRequest.RequestorEmail
       description: Email address of the user that created this request.
@@ -856,7 +799,8 @@ script:
       description: Path of the file on the agent.
       type: String
     - contextPath: CBP.ApprovalRequest.Process
-      description: Process that attempted to execute the file on the agent (the full process path).
+      description: Process that attempted to execute the file on the agent (the full
+        process path).
       type: String
     - contextPath: CBP.ApprovalRequest.Platform
       description: Platform of this approval request.
@@ -874,17 +818,19 @@ script:
       required: false
       secret: false
     - default: false
-      description: '(Int32) Maximum number of results to retrieve. If not specified, the first 1000 results will be returned. If set to "-1", only the result count will
-        be returned, without actual results, and the "offset" parameter is ignored.
-        If set to "0", all results will be returned, and the offset parameter is ignored. Note that some result sets might be very large, resulting in query
-        timeout. Therefore, unless you know that query will not return more than 1000
-        results, it is recommended to retrieve data in chunks using offset and limit.'
+      description: (Int) Maximum number of results to retrieve. If not specified,
+        the first 1000 results will be returned. If set to "-1", only the result count
+        will be returned, without actual results, and the "offset" parameter is ignored.
+        If set to "0", all results will be returned, and the offset parameter is ignored.
+        Note that some result sets might be very large, resulting in query timeout.
+        Therefore, unless you know that query will not return more than 1000 results,
+        it is recommended to retrieve data in chunks using offset and limit.
       isArray: false
       name: limit
       required: false
       secret: false
     - default: false
-      description: (Int32) Offset in the data set.
+      description: (Int) Offset in the data set.
       isArray: false
       name: offset
       required: false
@@ -897,15 +843,16 @@ script:
       required: false
       secret: false
     - default: false
-      description: 'Sorting is optional and can be defined with a single attribute where xyz is field name from the result set:
-        &sort=xyz [ASC|DESC]. There can be only one sorting field. Default sort order
-        is ascending (ASC). '
+      description: 'Sorting is optional and can be defined with a single attribute
+        where xyz is field name from the result set: &sort=xyz [ASC|DESC]. There can
+        be only one sorting field. Default sort order is ascending (ASC). '
       isArray: false
       name: sort
       required: false
       secret: false
     deprecated: false
-    description: 'Search for file rules. For more information, see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#filerule'
+    description: 'Search for file rules. For more information, see the Carbon Black
+      documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#filerule'
     execution: false
     name: cbp-fileRule-search
     outputs:
@@ -935,13 +882,14 @@ script:
       type: String
   - arguments:
     - default: true
-      description: (Int32) Unique ID of the file rule.
+      description: (Int) Unique ID of the file rule.
       isArray: false
       name: id
       required: true
       secret: false
     deprecated: false
-    description: 'Gets the file rule. For more information, see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#filerule'
+    description: 'Gets the file rule. For more information, see the Carbon Black documentation:
+      https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#filerule'
     execution: false
     name: cbp-fileRule-get
     outputs:
@@ -971,13 +919,14 @@ script:
       type: String
   - arguments:
     - default: true
-      description: (Int32) Unique id of this fileRule
+      description: (Int) Unique id of this fileRule
       isArray: false
       name: id
       required: true
       secret: false
     deprecated: false
-    description: 'Deletes the file rule. For more information, see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#filerule'
+    description: 'Deletes the file rule. For more information, see the Carbon Black
+      documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#filerule'
     execution: false
     name: cbp-fileRule-delete
   - arguments:
@@ -993,17 +942,19 @@ script:
       required: false
       secret: false
     - default: false
-      description: '(Int32) Maximum number of results to retrieve. If not specified, the first 1000 results will be returned. If set to "-1", only the result count will
-        be returned, without actual results, and the "offset" parameter is ignored.
-        If set to "0", all results will be returned, and the "offset" parameter is ignored. Note that some result sets might be very large, resulting in query
+      description: (Int) Maximum number of results to retrieve. If not specified,
+        the first 1000 results will be returned. If set to "-1", only the result count
+        will be returned, without actual results, and the "offset" parameter is ignored.
+        If set to "0", all results will be returned, and the "offset" parameter is
+        ignored. Note that some result sets might be very large, resulting in query
         timeout. Therefore, unless you know that query will not return more than 1000
-        results, it is recommended to retrieve data in chunks using offset and limit.'
+        results, it is recommended to retrieve data in chunks using offset and limit.
       isArray: false
       name: limit
       required: false
       secret: false
     - default: false
-      description: (Int32) Offset in the data set.
+      description: (Int) Offset in the data set.
       isArray: false
       name: offset
       required: false
@@ -1016,15 +967,16 @@ script:
       required: false
       secret: false
     - default: false
-      description: 'Sorting is optional and can be defined with a single attribute where xyz is field name from the result set:
-        &sort=xyz [ASC|DESC]. There can be only one sorting field. Default sort order
-        is ascending (ASC). '
+      description: 'Sorting is optional and can be defined with a single attribute
+        where xyz is field name from the result set: &sort=xyz [ASC|DESC]. There can
+        be only one sorting field. Default sort order is ascending (ASC). '
       isArray: false
       name: sort
       required: false
       secret: false
     deprecated: false
-    description: 'Search for policies. For more information, see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#policy'
+    description: 'Search for policies. For more information, see the Carbon Black
+      documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#policy'
     execution: false
     name: cbp-policy-search
     outputs:
@@ -1089,16 +1041,19 @@ script:
       required: false
       secret: false
     - default: false
-      description: '(Int32) Maximum number of results to retrieve. If not specified, the first 1000 results will be returned. If set to "-1", only the result count will
-        be returned, without actual results, and the "offset" parameter is ignored. If set to "0", all results will be returned, and the "offset" parameter is ignored. Note that some result sets might be very large, resulting in query
+      description: (Int) Maximum number of results to retrieve. If not specified,
+        the first 1000 results will be returned. If set to "-1", only the result count
+        will be returned, without actual results, and the "offset" parameter is ignored.
+        If set to "0", all results will be returned, and the "offset" parameter is
+        ignored. Note that some result sets might be very large, resulting in query
         timeout. Therefore, unless you know that query will not return more than 1000
-        results, it is recommended to retrieve data in chunks using offset and limit.'
+        results, it is recommended to retrieve data in chunks using offset and limit.
       isArray: false
       name: limit
       required: false
       secret: false
     - default: false
-      description: (Int32) Offset in the data set.
+      description: (Int) Offset in the data set.
       isArray: false
       name: offset
       required: false
@@ -1111,15 +1066,16 @@ script:
       required: false
       secret: false
     - default: false
-      description: 'Sorting is optional and can be defined with a single attribute where xyz is field name from the result set:
-        &sort=xyz [ASC|DESC]. There can be only one sorting field. Default sort order
-       is ascending (ASC). '
+      description: 'Sorting is optional and can be defined with a single attribute
+        where xyz is field name from the result set: &sort=xyz [ASC|DESC]. There can
+        be only one sorting field. Default sort order is ascending (ASC). '
       isArray: false
       name: sort
       required: false
       secret: false
     deprecated: false
-    description: 'Search in server configurations. For more information, see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#serverconfig.'
+    description: 'Search in server configurations. For more information, see the Carbon
+      Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#serverconfig.'
     execution: false
     name: cbp-serverConfig-search
     outputs:
@@ -1145,16 +1101,19 @@ script:
       required: false
       secret: false
     - default: false
-      description: '(Int32) Maximum number of results to retrieve. If not specified, the first 1000 results will be returned. If set to "-1", only the result count will
-        be returned, without actual results, and the "offset" parameter is ignored. If set to "0", all results will be returned, and the "offset" parameter is ignored. Note that some result sets might be very large, resulting in query
+      description: (Int) Maximum number of results to retrieve. If not specified,
+        the first 1000 results will be returned. If set to "-1", only the result count
+        will be returned, without actual results, and the "offset" parameter is ignored.
+        If set to "0", all results will be returned, and the "offset" parameter is
+        ignored. Note that some result sets might be very large, resulting in query
         timeout. Therefore, unless you know that query will not return more than 1000
-        results, it is recommended to retrieve data in chunks using offset and limit.'
+        results, it is recommended to retrieve data in chunks using offset and limit.
       isArray: false
       name: limit
       required: false
       secret: false
     - default: false
-      description: (Int32) Offset in the data set.
+      description: (Int) Offset in the data set.
       isArray: false
       name: offset
       required: false
@@ -1167,15 +1126,16 @@ script:
       required: false
       secret: false
     - default: false
-      description: 'Sorting is optional and can be defined with a single attribute where xyz is field name from the result set:
-        &sort=xyz [ASC|DESC]. There can be only one sorting field. Default sort order
-        is ascending (ASC). '
+      description: 'Sorting is optional and can be defined with a single attribute
+        where xyz is field name from the result set: &sort=xyz [ASC|DESC]. There can
+        be only one sorting field. Default sort order is ascending (ASC). '
       isArray: false
       name: sort
       required: false
       secret: false
     deprecated: false
-    description: 'Search for publishers. For more information, see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#publisher.'
+    description: 'Search for publishers. For more information, see the Carbon Black
+      documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#publisher.'
     execution: false
     name: cbp-publisher-search
     outputs:
@@ -1202,7 +1162,7 @@ script:
       type: String
   - arguments:
     - default: true
-      description: (Int32) Unique fileAnalysis ID.
+      description: (Int) Unique fileAnalysis ID.
       isArray: false
       name: id
       required: true
@@ -1213,8 +1173,8 @@ script:
     name: cbp-fileAnalysis-get
     outputs:
     - contextPath: CBP.FileAnalysis.Priority
-      description: File analysis priority.  Valid range is [-2, 2], where 2 is highest priority.
-        Default priority is "0".
+      description: File analysis priority.  Valid range is [-2, 2], where 2 is highest
+        priority. Default priority is "0".
       type: Number
     - contextPath: CBP.FileAnalysis.PathName
       description: Path of the file on the endpoint.
@@ -1275,29 +1235,29 @@ script:
       type: number
   - arguments:
     - default: false
-      description: (Int32) ID of the fileCatalog entry for which analysis is requested.
+      description: (Int) ID of the fileCatalog entry for which analysis is requested.
       isArray: false
       name: fileCatalogId
       required: true
       secret: false
     - default: false
-      description: (Int32) ID of the target connector for the analysis.
+      description: (Int) ID of the target connector for the analysis.
       isArray: false
       name: connectorId
       required: true
       secret: false
     - default: false
       defaultValue: '0'
-      description: (Int32) ID of the computer from which to upload the file. If "0", the system
-        will identify the best computer from which to get the file.
+      description: (Int) ID of the computer from which to upload the file. If "0",
+        the system will identify the best computer from which to get the file.
       isArray: false
       name: computerId
       required: false
       secret: false
     - default: false
       defaultValue: '0'
-      description: '(Int32) The analysis priority (valid range: -2, 2), where "2" is highest priority.
-        Default priority is "0".'
+      description: '(Int) The analysis priority (valid range: -2, 2), where "2" is
+        highest priority. Default priority is "0".'
       isArray: false
       name: priority
       predefined:
@@ -1309,16 +1269,16 @@ script:
       required: false
       secret: false
     - default: false
-      description: (Int32) Status of the analysis. The status of an analysis that is in progress can be
-        changed to "5" (Cancelled).
+      description: (Int) Status of the analysis. The status of an analysis that is
+        in progress can be changed to "5" (Cancelled).
       isArray: false
       name: analysisStatus
       required: false
       secret: false
     - default: false
-      description: (String) Target of the analysis. It has to be one of
-        possible analysisTarget options defined for the given connector object, or
-        empty for connectors without defined analysisTargets.
+      description: (String) Target of the analysis. It has to be one of possible analysisTarget
+        options defined for the given connector object, or empty for connectors without
+        defined analysisTargets.
       isArray: false
       name: analysisTarget
       required: false
@@ -1335,8 +1295,8 @@ script:
     name: cbp-fileAnalysis-createOrUpdate
     outputs:
     - contextPath: CBP.FileAnalysis.Priority
-      description: 'File analysis priority in range (valid range: -2, 2), where "2" is highest priority.
-        Default priority is "0".'
+      description: 'File analysis priority in range (valid range: -2, 2), where "2"
+        is highest priority. Default priority is "0".'
       type: Number
     - contextPath: CBP.FileAnalysis.PathName
       description: Path of the file where the file exists on the endpoint.
@@ -1372,17 +1332,19 @@ script:
       required: false
       secret: false
     - default: false
-      description: '(Int32) Maximum number of results to retrieve. If not specified, the first 1000 results will be returned. If set to "-1", only the result count will
-        be returned, without actual results, and the offset parameter is ignored.
-        If set to "0", all results will be returned, and the offset parameter is ignored. Note that some result sets might be very large, resulting in query
-        timeout. Therefore, unless you know that query will not return more than 1000
-        results, it is recommended to retrieve data in chunks using offset and limit.'
+      description: (Int) Maximum number of results to retrieve. If not specified,
+        the first 1000 results will be returned. If set to "-1", only the result count
+        will be returned, without actual results, and the offset parameter is ignored.
+        If set to "0", all results will be returned, and the offset parameter is ignored.
+        Note that some result sets might be very large, resulting in query timeout.
+        Therefore, unless you know that query will not return more than 1000 results,
+        it is recommended to retrieve data in chunks using offset and limit.
       isArray: false
       name: limit
       required: false
       secret: false
     - default: false
-      description: (Int32) Offset in the data set.
+      description: (Int) Offset in the data set.
       isArray: false
       name: offset
       required: false
@@ -1396,8 +1358,8 @@ script:
       secret: false
     - default: false
       description: 'Sorting is optional and can be defined with a single attribute:
-        &sort=xyz [ASC|DESC], where xyz is the field name from the result set. There can be only one sorting field. Default sort order
-        is ascending (ASC). '
+        &sort=xyz [ASC|DESC], where xyz is the field name from the result set. There
+        can be only one sorting field. Default sort order is ascending (ASC). '
       isArray: false
       name: sort
       required: false
@@ -1408,8 +1370,8 @@ script:
     name: cbp-fileAnalysis-search
     outputs:
     - contextPath: CBP.FileAnalysis.Priority
-      description: 'File analysis priority in range (valid range: -2, 2), where "2" is highest priority.
-        Default priority is "0".'
+      description: 'File analysis priority in range (valid range: -2, 2), where "2"
+        is highest priority. Default priority is "0".'
       type: Number
     - contextPath: CBP.FileAnalysis.PathName
       description: Path of the file where the file exists on the endpoint.
@@ -1434,7 +1396,7 @@ script:
       type: String
   - arguments:
     - default: true
-      description: (Int32) Unique ID of this fileUpload.
+      description: (Int) Unique ID of this fileUpload.
       isArray: false
       name: id
       required: true
@@ -1445,15 +1407,15 @@ script:
     name: cbp-fileUpload-get
     outputs:
     - contextPath: CBP.FileUpload.Priority
-      description: 'File analysis priority in range (valid range: -2, 2), where "2" is highest priority.
-        Default priority is "0".'
+      description: 'File analysis priority in range (valid range: -2, 2), where "2"
+        is highest priority. Default priority is "0".'
       type: Number
     - contextPath: CBP.FileUpload.FileName
       description: Name of the file where the file exists on the endpoint.
       type: String
     - contextPath: CBP.FileUpload.UploadPath
-      description: Local upload path for the file on the server (can be a shared
-        network path). Note that the file is compressed in a ZIP archive.
+      description: Local upload path for the file on the server (can be a shared network
+        path). Note that the file is compressed in a ZIP archive.
       type: String
     - contextPath: CBP.FileUpload.ComputerId
       description: ID of the computer entry associated with this analysis.
@@ -1477,15 +1439,15 @@ script:
       description: 'Status of the upload (valid range: 0-6).'
       type: Number
     - contextPath: CBP.FileUpload.UploadedFileSize
-      description: Size of the uploaded file. The file size will be 0 unless the uploadStatus is "3"
-        (Completed).
+      description: Size of the uploaded file. The file size will be 0 unless the uploadStatus
+        is "3" (Completed).
       type: String
     - contextPath: CBP.FileUpload.CreatedBy
       description: User that requested the analysis.
       type: String
   - arguments:
     - default: true
-      description: (Int32) Unique ID of the fileUpload.
+      description: (Int) Unique ID of the fileUpload.
       isArray: false
       name: id
       required: true
@@ -1496,22 +1458,22 @@ script:
     name: cbp-fileUpload-download
   - arguments:
     - default: false
-      description: (Int32) ID of the fileCatalog entry for file to upload.
+      description: (Int) ID of the fileCatalog entry for file to upload.
       isArray: false
       name: fileCatalogId
       required: true
       secret: false
     - default: false
       defaultValue: '0'
-      description: (Int32) ID of the computer entry associated with this analysis.
+      description: (Int) ID of the computer entry associated with this analysis.
       isArray: false
       name: computerId
       required: false
       secret: false
     - auto: PREDEFINED
       default: false
-      description: 'File analysis priority in range (valid range: -2, 2), where "2" is highest priority.
-        Default priority is "0".'
+      description: 'File analysis priority in range (valid range: -2, 2), where "2"
+        is highest priority. Default priority is "0".'
       isArray: false
       name: priority
       predefined:
@@ -1523,8 +1485,8 @@ script:
       required: false
       secret: false
     - default: false
-      description: (Int32)Status of upload. The status of "upload in progress" can be changed
-        to "5" (Cancelled). Any upload can be changed to "6" (Deleted).
+      description: (Int)Status of upload. The status of "upload in progress" can be
+        changed to "5" (Cancelled). Any upload can be changed to "6" (Deleted).
       isArray: false
       name: uploadStatus
       required: false
@@ -1542,8 +1504,8 @@ script:
     name: cbp-fileUpload-createOrUpdate
     outputs:
     - contextPath: CBP.FileUpload.Priority
-      description: 'File analysis priority in range (valid range: -2, 2), where "2" is highest priority.
-        Default priority is "0".'
+      description: 'File analysis priority in range (valid range: -2, 2), where "2"
+        is highest priority. Default priority is "0".'
       type: Number
     - contextPath: CBP.FileUpload.CreatedByUserId
       description: ID of the user that requested the analysis.
@@ -1577,8 +1539,8 @@ script:
       description: Unique fileAnalysis ID.
       type: String
     - contextPath: CBP.FileUpload.UploadedFileSize
-      description: Size of uploaded file. The file size will be 0 unless the uploadStatus is "3"
-        (Completed).
+      description: Size of uploaded file. The file size will be 0 unless the uploadStatus
+        is "3" (Completed).
       type: Number
   - arguments:
     - default: false
@@ -1593,17 +1555,19 @@ script:
       required: false
       secret: false
     - default: false
-      description: '(Int32) Maximum number of results to retrieve. If not specified, the first 1000 results will be returned. If set to "-1", only the result count will
-        be returned, without actual results, and the offset parameter is ignored.
-        If set to "0", all results will be returned, and the offset parameter is ignored. Note that some result sets might be very large, resulting in query
-        timeout. Therefore, unless you know that query will not return more than 1000
-        results, it is recommended to retrieve data in chunks using offset and limit.'
+      description: (Int) Maximum number of results to retrieve. If not specified,
+        the first 1000 results will be returned. If set to "-1", only the result count
+        will be returned, without actual results, and the offset parameter is ignored.
+        If set to "0", all results will be returned, and the offset parameter is ignored.
+        Note that some result sets might be very large, resulting in query timeout.
+        Therefore, unless you know that query will not return more than 1000 results,
+        it is recommended to retrieve data in chunks using offset and limit.
       isArray: false
       name: limit
       required: false
       secret: false
     - default: false
-      description: (Int32) Offset in the data set.
+      description: (Int) Offset in the data set.
       isArray: false
       name: offset
       required: false
@@ -1617,8 +1581,8 @@ script:
       secret: false
     - default: false
       description: 'Sorting is optional and can be defined with a single attribute:
-        &sort=xyz [ASC|DESC], where xyz is the field name from the result set. There can be only one sorting field. Default sort order
-        is ascending (ASC).'
+        &sort=xyz [ASC|DESC], where xyz is the field name from the result set. There
+        can be only one sorting field. Default sort order is ascending (ASC).'
       isArray: false
       name: sort
       required: false
@@ -1629,8 +1593,8 @@ script:
     name: cbp-fileUpload-search
     outputs:
     - contextPath: CBP.FileUpload.Priority
-      description: 'File analysis priority in range (valid range: -2, 2), where "2" is highest priority.
-        Default priority is "0".'
+      description: 'File analysis priority in range (valid range: -2, 2), where "2"
+        is highest priority. Default priority is "0".'
       type: Number
     - contextPath: CBP.FileUpload.CreatedByUserId
       description: ID of the user that requested the analysis.
@@ -1664,12 +1628,12 @@ script:
       description: Unique fileAnalysis ID.
       type: String
     - contextPath: CBP.FileUpload.UploadedFileSize
-      description: Size of the uploaded file. The file size will be 0 unless the uploadStatus is "3"
-        (Completed).
+      description: Size of the uploaded file. The file size will be 0 unless the uploadStatus
+        is "3" (Completed).
       type: Number
   - arguments:
     - default: true
-      description: (Int32) Unique connector ID.
+      description: (Int) Unique connector ID.
       isArray: false
       name: id
       required: true
@@ -1680,11 +1644,12 @@ script:
     name: cbp-connector-get
     outputs:
     - contextPath: CBP.Connector.AnalysisEnabled
-      description: '"True" if the analysis component of this connector is enabled. "False" if the analysis component of this connector is disabled.'
+      description: '"True" if the analysis component of this connector is enabled.
+        "False" if the analysis component of this connector is disabled.'
       type: Boolean
     - contextPath: CBP.Connector.AnalysisName
-      description: Name for the analysis component of the connector (can be same as the
-        name field).
+      description: Name for the analysis component of the connector (can be same as
+        the name field).
       type: String
     - contextPath: CBP.Connector.AnalysisTargets
       description: Array of possible analysis targets. Analysis targets are required
@@ -1692,13 +1657,15 @@ script:
         and are available only for some internal connectors.
       type: String
     - contextPath: CBP.Connector.CanAnalyze
-      description: '"True" if this connector can analyze files. "False" if this connector cannot analyze files.'
+      description: '"True" if this connector can analyze files. "False" if this connector
+        cannot analyze files.'
       type: Boolean
     - contextPath: CBP.Connector.ConnectorVersion
       description: Version of this connector.
       type: String
     - contextPath: CBP.Connector.Enabled
-      description: '"True" if the connector is enabled. "False" if the connector is disabled.'
+      description: '"True" if the connector is enabled. "False" if the connector is
+        disabled.'
       type: Boolean
     - contextPath: CBP.Connector.ID
       description: Unique fileAnalysis ID.
@@ -1716,17 +1683,19 @@ script:
       required: false
       secret: false
     - default: false
-      description: '(Int32) Maximum number of results to retrieve. If not specified, the first 1000 results will be returned. If set to "-1", only the result count will
-        be returned, without actual results, and the offset parameter is ignored.
-        If set to "0", all results will be returned, and the offset parameter is ignored. Note that some result sets might be very large, resulting in query
-        timeout. Therefore, unless you know that query will not return more than 1000
-        results, it is recommended to retrieve data in chunks using offset and limit.'
+      description: (Int) Maximum number of results to retrieve. If not specified,
+        the first 1000 results will be returned. If set to "-1", only the result count
+        will be returned, without actual results, and the offset parameter is ignored.
+        If set to "0", all results will be returned, and the offset parameter is ignored.
+        Note that some result sets might be very large, resulting in query timeout.
+        Therefore, unless you know that query will not return more than 1000 results,
+        it is recommended to retrieve data in chunks using offset and limit.
       isArray: false
       name: limit
       required: false
       secret: false
     - default: false
-      description: (Int32) Offset in the data set.
+      description: (Int) Offset in the data set.
       isArray: false
       name: offset
       required: false
@@ -1739,9 +1708,9 @@ script:
       required: false
       secret: false
     - default: false
-      description: 'Sorting is optional and can be defined with a single attribute where xyz is the field name from the result set:
-        &sort=xyz [ASC|DESC]. There can be only one sorting field. Default sort order
-        is ascending (ASC).'
+      description: 'Sorting is optional and can be defined with a single attribute
+        where xyz is the field name from the result set: &sort=xyz [ASC|DESC]. There
+        can be only one sorting field. Default sort order is ascending (ASC).'
       isArray: false
       name: sort
       required: false
@@ -1752,11 +1721,12 @@ script:
     name: cbp-connector-search
     outputs:
     - contextPath: CBP.Connector.AnalysisEnabled
-      description: '"True" if the analysis component of this connector is enabled. "False" if the analysis component of this connector is disabled.'
+      description: '"True" if the analysis component of this connector is enabled.
+        "False" if the analysis component of this connector is disabled.'
       type: Boolean
     - contextPath: CBP.Connector.AnalysisName
-      description: Name for the analysis component of the connector (can be same as the
-        name field).
+      description: Name for the analysis component of the connector (can be same as
+        the name field).
       type: String
     - contextPath: CBP.Connector.AnalysisTargets
       description: Array of possible analysis targets. Analysis targets are required
@@ -1764,13 +1734,15 @@ script:
         and are available only for some internal connectors.
       type: String
     - contextPath: CBP.Connector.CanAnalyze
-      description: '"True" if this connector can analyze files. "False" if this connector cannot analyze files.'
+      description: '"True" if this connector can analyze files. "False" if this connector
+        cannot analyze files.'
       type: Boolean
     - contextPath: CBP.Connector.ConnectorVersion
       description: Version of this connector.
       type: String
     - contextPath: CBP.Connector.Enabled
-      description: '"True" if the connector is enabled. "False" if the connector is disabled.'
+      description: '"True" if the connector is enabled. "False" if the connector is
+        disabled.'
       type: Boolean
     - contextPath: CBP.Connector.ID
       description: Unique fileAnalysis ID.
@@ -1859,8 +1831,8 @@ script:
       secret: false
     - auto: PREDEFINED
       default: false
-      description: '(Int32) File state for this rule. Can be one of: 1=Unapproved
-        2=Approved 3=Banned'
+      description: '(Int) File state for this rule. Can be one of: 1=Unapproved 2=Approved
+        3=Banned'
       isArray: false
       name: fileState
       predefined:
@@ -1870,13 +1842,13 @@ script:
       required: true
       secret: false
     - default: false
-      description: (Int32) Unique id of this fileRule
+      description: (Int) Unique id of this fileRule
       isArray: false
       name: id
       required: false
       secret: false
     - default: false
-      description: (Int32) ID of the fileCatalog entry associated with this fileRule.
+      description: (Int) ID of the fileCatalog entry associated with this fileRule.
         Can be "0" if creating or modifying the rule based on the hash or file name.
       isArray: false
       name: fileCatalogId
@@ -1907,7 +1879,8 @@ script:
       secret: false
     - auto: PREDEFINED
       default: false
-      description: (Boolean) "True" if reputation approvals are enabled for this file. "False" if reputation approvals are disabled for this file.
+      description: (Boolean) "True" if reputation approvals are enabled for this file.
+        "False" if reputation approvals are disabled for this file.
       isArray: false
       name: 'reputationApprovalsEnabled '
       predefined:
@@ -1938,14 +1911,14 @@ script:
       required: false
       secret: false
     - default: false
-      description: (String) List of IDs of policies to which this rule applies. Set to "0" if
-        this is a global rule.
+      description: (String) List of IDs of policies to which this rule applies. Set
+        to "0" if this is a global rule.
       isArray: false
       name: policyIds
       required: false
       secret: false
     - default: false
-      description: '(Int32) Set of platform flags where this file rule will be valid.
+      description: '(Int) Set of platform flags where this file rule will be valid.
         Combination of: 1 = Windows 2 = Mac 4 = Linux.'
       isArray: false
       name: platformFlags
@@ -1986,8 +1959,7 @@ script:
     - contextPath: CBP.FileRule.ReportOnly
       description: Whether this rule "reporting only" or is also "enforcing".
       type: String
-  - deprecated: false
-    arguments:
+  - arguments:
     - default: false
       description: (String) Hash associated with this rule. This parameter is not
         required if the fileCatalogId is supplied.
@@ -1997,8 +1969,8 @@ script:
       secret: false
     - auto: PREDEFINED
       default: false
-      description: '(Int32) File state for this rule. Can be one of: 1=Unapproved
-        2=Approved 3=Banned.'
+      description: '(Int) File state for this rule. Can be one of: 1=Unapproved 2=Approved
+        3=Banned.'
       isArray: false
       name: fileState
       predefined:
@@ -2008,13 +1980,13 @@ script:
       required: true
       secret: false
     - default: false
-      description: (Int32) Unique ID of this fileRule.
+      description: (Int) Unique ID of this fileRule.
       isArray: false
       name: id
       required: false
       secret: false
     - default: false
-      description: (Int32) ID of the fileCatalog entry associated with this fileRule.
+      description: (Int) ID of the fileCatalog entry associated with this fileRule.
         Can be "0" if creating or modifying the rule based on the hash or file name.`
       isArray: false
       name: fileCatalogId
@@ -2045,7 +2017,8 @@ script:
       secret: false
     - auto: PREDEFINED
       default: false
-      description: (Boolean) "True" if reputation approvals are enabled for this file. "False" if reputation approvals are disabled for this file.
+      description: (Boolean) "True" if reputation approvals are enabled for this file.
+        "False" if reputation approvals are disabled for this file.
       isArray: false
       name: 'reputationApprovalsEnabled '
       predefined:
@@ -2076,14 +2049,14 @@ script:
       required: false
       secret: false
     - default: false
-      description: (String) List of IDs of policies to which this rule applies. Set to "0" if
-        this is a global rule.
+      description: (String) List of IDs of policies to which this rule applies. Set
+        to "0" if this is a global rule.
       isArray: false
       name: policyIds
       required: false
       secret: false
     - default: false
-      description: '(Int32) Set of platform flags where this file rule will be valid.
+      description: '(Int) Set of platform flags where this file rule will be valid.
         combination of: 1 = Windows 2 = Mac 4 = Linux.'
       isArray: false
       name: platformFlags
@@ -2095,7 +2068,9 @@ script:
       name: headers
       required: false
       secret: false
-    description: 'Creates or updates a file rule. For more information, see the Carbon Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#filerule'
+    deprecated: false
+    description: 'Creates or updates a file rule. For more information, see the Carbon
+      Black documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#filerule'
     execution: false
     name: cbp-fileRule-createOrUpdate
     outputs:
@@ -2128,13 +2103,7 @@ script:
   runonce: false
   script: '-'
   type: python
-releaseNotes: Created integration. This integration replaces the existing Carbon Black
-  Enterprise Protection integration. It is recommended to use this integration instead
-  of the original Carbon Black Protection integration, as it contains all the commands
-  from V1 (except for cbp-notification-search because it's not supported in the API
-  anymore), with the same inputs with improved features. Please note, if you switch
-  from V1 to V2, the output paths of the commands have changed - if you have a script
-  or a playbook that uses these outputs you will need to update it with the new output
-  paths.
+releaseNotes: Made argument descriptions clearer, and added arguments that should
+  help streamline search commands
 tests:
 - Carbon Black Enterprise Protection V2 Test

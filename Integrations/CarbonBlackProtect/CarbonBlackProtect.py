@@ -35,6 +35,126 @@ if not demisto.params().get('proxy'):
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
+''' HUMAN READABLE HEADERS '''
+
+
+APPROVAL_REQUEST_HEADERS = [
+    'ID',
+    'FileName',
+    'Status',
+    'DateCreated',
+    'Platform'
+]
+
+
+COMPUTER_HEADERS = [
+    'ID',
+    'Hostname',
+    'IPAddress',
+    'MACAddress',
+    'OSVersion',
+    'Processor',
+    'Processors',
+    'Model'
+]
+
+
+CONNECTOR_HEADERS = [
+    'ID',
+    'AnalysisName',
+    'Enabled',
+    'AnalysisEnabled',
+    'AnalysisTargets',
+    'CanAnalyze',
+    'ConnectorVersion'
+]
+
+
+EVENT_HEADERS = [
+    'ID',
+    'Type',
+    'SubType',
+    'Severity',
+    'Description'
+]
+
+
+FILE_ANALYSIS_HEADERS = [
+    'ID',
+    'PathName',
+    'Priority',
+    'FileCatalogId',
+    'ComputerID',
+    'DateCreated',
+    'DateModified',
+    'CreatedBy'
+]
+
+
+FILE_CATALOG_HEADERS = [
+    'ID',
+    'Name',
+    'Type',
+    'Extension',
+    'Path',
+    'Size'
+    'ProductName',
+    'Publisher',
+    'Company'
+]
+
+
+FILE_INSTANCE_HEADERS = [
+    'ID',
+    'Name',
+    'Path',
+    'ComputerID',
+    'CatalogID'
+]
+
+
+FILE_RULE_HEADERS = [
+    'ID',
+    'Name',
+    'Description',
+    'PolicyIDs',
+    'FileState',
+    'CatalogID',
+    'Hash',
+    'ReportOnly'
+]
+
+
+FILE_UPLOAD_HEADERS = [
+    'ID',
+    'PathName',
+    'UploadPath',
+    'UploadStatus',
+    'DateCreated',
+    'DateModified',
+    'UploadedFileSize',
+    'ComputerId',
+    'Priority',
+    'CreatedBy'
+]
+
+POLICY_HEADERS = [
+    'ID',
+    'Name',
+    'PackageName',
+    'Description',
+    'EnforcementLevel'
+]
+
+PUBLISHER_HEADERS = [
+    'ID',
+    'Name',
+    'Description',
+    'Reputation',
+    'State',
+    'SignedCertificatesCount',
+    'SignedFilesCount'
+]
 
 ''' HELPER FUNCTIONS '''
 
@@ -190,7 +310,7 @@ def search_file_catalog_command():
     args = demisto.args()
     raw_catalogs = search_file_catalog(args.get('query'), args.get('limit'), args.get('offset'),
                                        args.get('sort'), args.get('group'))
-    headers = args.get('headers')
+    headers = args.get('headers', FILE_CATALOG_HEADERS)
     catalogs = []
     for catalog in raw_catalogs:
         catalogs.append({
@@ -246,7 +366,7 @@ def search_computer_command():
     args = demisto.args()
     raw_computers = search_computer(args.get('query'), args.get('limit'), args.get('offset'),
                                     args.get('sort'), args.get('group'))
-    headers = args.get('headers')
+    headers = args.get('headers', COMPUTER_HEADERS)
     computers = []
     for computer in raw_computers:
         computers.append({
@@ -329,7 +449,7 @@ def update_computer_command():
         'Hostname': raw_computers.get('name'),
         'ID': raw_computers.get('id')
     }
-    hr = tableToMarkdown('CarbonBlack Protect computer updated successfully', computers)
+    hr = tableToMarkdown('CarbonBlack Protect computer updated successfully', computers, COMPUTER_HEADERS)
     return_outputs(hr, {'Endpoint(val.ID === obj.ID)': computers}, raw_computers)
 
 
@@ -403,7 +523,7 @@ def get_computer_command():
         'Hostname': raw_computer.get('name'),
         'ID': raw_computer.get('id')
     }
-    headers = args.get('headers')
+    headers = args.get('headers', COMPUTER_HEADERS)
     hr_title = f'CarbonBlack Protect Computer Get for {id}'
     hr = tableToMarkdown(hr_title, computer, headers, removeNull=True, headerTransform=pascalToSpace)
     entry_context_computer = {'Endpoint(val.ID === obj.ID)': computer} if computer else None
@@ -429,7 +549,7 @@ def search_file_instance_command():
     args = demisto.args()
     raw_files = search_file_instance(args.get('query'), args.get('limit'), args.get('offset'),
                                      args.get('sort'), args.get('group'))
-    headers = args.get('headers')
+    headers = args.get('headers', FILE_INSTANCE_HEADERS)
     files = []
     if raw_files:
         for file in raw_files:
@@ -507,7 +627,7 @@ def search_event_command():
                 'CommandLine': event.get('commandLine'),
                 'ProcessPathName': event.get('processPathName')
             })
-    headers = args.get('headers')
+    headers = args.get('headers', EVENT_HEADERS)
     hr_title = "CarbonBlack Protect Event Search"
     hr = tableToMarkdown(hr_title, events, headers, removeNull=True, headerTransform=pascalToSpace)
     events = {'CBP.Event(val.ID === obj.ID)': events} if events else None
@@ -574,7 +694,7 @@ def search_approval_request_command():
             hr_approval_request['Resolution'] = approval_request_resolution_to_string(hr_approval_request['Resolution'])
             hr_approval_request['Status'] = approval_request_status_to_string(hr_approval_request['Status'])
             hr_approval_requests.append(hr_approval_request)
-    headers = args.get('headers')
+    headers = args.get('headers', APPROVAL_REQUEST_HEADERS)
     hr_title = "CarbonBlack Protect Approval Request Search"
     hr = tableToMarkdown(hr_title, hr_approval_requests, headers, removeNull=True, headerTransform=pascalToSpace)
     approval_requests = {'CBP.ApprovalRequest(val.ID === obj.ID)': approval_requests} if approval_requests else None
@@ -669,7 +789,7 @@ def search_file_rule_command():
             hr_file_rule_output = dict(file_rule_output)
             hr_file_rule_output['FileState'] = file_rule_file_state_to_string(hr_file_rule_output['FileState'])
             hr_file_rules.append(hr_file_rule_output)
-    headers = args.get('headers')
+    headers = args.get('headers', FILE_RULE_HEADERS)
     hr_title = "CarbonBlack Protect File Rule Search"
     hr = tableToMarkdown(hr_title, hr_file_rules, headers, removeNull=True, headerTransform=pascalToSpace)
     file_rules = {'CBP.FileRule(val.ID === obj.ID)': file_rules} if file_rules else None
@@ -736,7 +856,7 @@ def get_file_rule_command():
     }
     hr_file_rule = dict(file_rule)
     hr_file_rule['FileState'] = file_rule_file_state_to_string(hr_file_rule['FileState'])
-    headers = args.get('headers')
+    headers = args.get('headers', FILE_RULE_HEADERS)
     hr_title = f'CarbonBlack Protect File Rule Get for {id}'
     hr = tableToMarkdown(hr_title, hr_file_rule, headers, removeNull=True, headerTransform=pascalToSpace)
     entry_context_file_rule = {'CBP.FileRule(val.ID === obj.ID)': file_rule} if file_rule else None
@@ -815,7 +935,7 @@ def update_file_rule_command():
     }
     hr_file_rule = dict(file_rule)
     hr_file_rule['FileState'] = file_rule_file_state_to_string(hr_file_rule['FileState'])
-    hr = tableToMarkdown('CarbonBlack Protect File Rule Updated successfully', hr_file_rule,
+    hr = tableToMarkdown('CarbonBlack Protect File Rule Updated successfully', hr_file_rule, FILE_RULE_HEADERS,
                          removeNull=True, headerTransform=pascalToSpace)
     return_outputs(hr, {'CBP.FileRule(val.ID === obj.ID)': file_rule}, raw_file_rule)
 
@@ -887,7 +1007,7 @@ def search_policy_command():
                 'Description': policy.get('description'),
                 'DisconnectedEnforcementLevel': policy.get('disconnectedEnforcementLevel')
             })
-    headers = args.get('headers')
+    headers = args.get('headers', POLICY_HEADERS)
     hr_title = "CarbonBlack Protect Policy Search"
     hr = tableToMarkdown(hr_title, policies, headers, removeNull=True, headerTransform=pascalToSpace)
     policies = {'CBP.Policy(val.ID === obj.ID)': policies} if policies else None
@@ -1026,7 +1146,7 @@ def search_publisher_command():
             hr_publisher_output['State'] = publisher_state_to_string(hr_publisher_output['State'])
             hr_publisher_output['Reputation'] = publisher_reputation_to_string(hr_publisher_output['Reputation'])
             hr_publishers.append(hr_publisher_output)
-    headers = args.get('headers')
+    headers = args.get('headers', PUBLISHER_HEADERS)
     hr_title = "CarbonBlack Protect Publisher Search"
     hr = tableToMarkdown(hr_title, hr_publishers, headers, removeNull=True, headerTransform=pascalToSpace)
     publishers = {'CBP.Publisher(val.ID === obj.ID)': publishers} if publishers else None
@@ -1070,7 +1190,8 @@ def get_file_analysis_command():
     cbp_ec_key = 'CBP.FileAnalysis(val.ID === obj.ID)'
     ec = create_file_analysis_result(raw_file_analysis, raw_file_rule, cbp_ec_key)
     hr_title = f'CarbonBlack Protect Get File Analysis for {id}'
-    hr = tableToMarkdown(hr_title, ec[cbp_ec_key], removeNull=True, headerTransform=pascalToSpace)
+    hr = tableToMarkdown(hr_title, ec[cbp_ec_key], FILE_ANALYSIS_HEADERS,
+                         removeNull=True, headerTransform=pascalToSpace)
     return_outputs(hr, ec, raw_file_analysis)
 
 
@@ -1165,7 +1286,7 @@ def update_file_analysis_command():
         'DateCreated': raw_file_analysis.get('dateCreated'),
         'CreatedBy': raw_file_analysis.get('createdBy')
     }
-    hr = tableToMarkdown('CarbonBlack Protect File Analysis Created successfully', file_analysis)
+    hr = tableToMarkdown('CarbonBlack Protect File Analysis Created successfully', file_analysis, FILE_ANALYSIS_HEADERS)
     return_outputs(hr, {'CBP.FileAnalysis(val.ID === obj.ID)': file_analysis}, raw_file_analysis)
 
 
@@ -1225,7 +1346,7 @@ def update_file_upload_command():
     }
     hr_file_upload = dict(file_upload)
     hr_file_upload['UploadStatus'] = file_upload_status_to_string(hr_file_upload['UploadStatus'])
-    hr = tableToMarkdown('CarbonBlack Protect File Upload Created successfully', hr_file_upload)
+    hr = tableToMarkdown('CarbonBlack Protect File Upload Created successfully', hr_file_upload, FILE_UPLOAD_HEADERS)
     return_outputs(hr, {'CBP.FileUpload(val.ID === obj.ID)': file_upload}, raw_file_upload)
 
 
@@ -1327,7 +1448,7 @@ def search_file_upload_command():
             hr_file_upload = dict(file_upload_output)
             hr_file_upload['UploadStatus'] = file_upload_status_to_string(hr_file_upload['UploadStatus'])
             hr_file_uploads.append(hr_file_upload)
-    headers = args.get('headers')
+    headers = args.get('headers', FILE_UPLOAD_HEADERS)
     hr_title = "CarbonBlack Protect File Upload Search"
     hr = tableToMarkdown(hr_title, hr_file_uploads, headers, removeNull=True, headerTransform=pascalToSpace)
     file_uploads = {'CBP.FileUpload(val.ID === obj.ID)': file_uploads} if file_uploads else None
@@ -1380,7 +1501,7 @@ def search_file_analysis_command():
                 'DateCreated': analysis.get('dateCreated'),
                 'CreatedBy': analysis.get('createdBy')
             })
-    headers = args.get('headers')
+    headers = args.get('headers', FILE_ANALYSIS_HEADERS)
     hr_title = "CarbonBlack Protect File Analysis Search"
     hr = tableToMarkdown(hr_title, file_analysis, headers, removeNull=True, headerTransform=pascalToSpace)
     file_analysis = {'CBP.FileAnalysis(val.ID === obj.ID)': file_analysis} if file_analysis else None
@@ -1433,7 +1554,7 @@ def get_file_upload_command():
         'UploadStatus': raw_file_upload.get('uploadStatus'),
         'UploadedFileSize': raw_file_upload.get('uploadedFileSize'),
     }
-    headers = args.get('headers')
+    headers = args.get('headers', FILE_UPLOAD_HEADERS)
     hr_file_upload = dict(file_upload)
     hr_file_upload['UploadStatus'] = file_upload_status_to_string(hr_file_upload['UploadStatus'])
     hr_title = f'CarbonBlack Protect File Upload Get for {id}'
@@ -1470,7 +1591,7 @@ def get_connector_command():
         'Enabled': raw_connector.get('enabled'),
         'ID': raw_connector.get('id')
     }
-    headers = args.get('headers')
+    headers = args.get('headers', CONNECTOR_HEADERS)
     hr_title = f'CarbonBlack Protect Connector Get for {id}'
     hr = tableToMarkdown(hr_title, connector, headers, removeNull=True, headerTransform=pascalToSpace)
     entry_context_connector = {'CBP.Connector(val.ID === obj.ID)': connector} if connector else None
@@ -1508,7 +1629,7 @@ def search_connector_command():
                 'Enabled': connector.get('enabled'),
                 'ID': connector.get('id')
             })
-    headers = args.get('headers')
+    headers = args.get('headers', CONNECTOR_HEADERS)
     hr_title = "CarbonBlack Protect Connector Search"
     hr = tableToMarkdown(hr_title, connectors, headers, removeNull=True, headerTransform=pascalToSpace)
     connectors = {'CBP.Connector(val.ID === obj.ID)': connectors} if connectors else None
