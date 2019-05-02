@@ -668,12 +668,15 @@ def search_event_command():
     :return: EntryObject of the file instance
     """
     args = demisto.args()
-    raw_events = search_event(args.get('query'), args.get('limit'), args.get('offset'),
-                              args.get('sort'), args.get('group'))
+    raw_events = search_event(args.get('query'), args.get('limit'), args.get('offset'), args.get('sort'),
+                              args.get('group'), args.get('type'), args.get('computerId'), args.get('ipAddress'),
+                              args.get('fileName'), args.get('severity'), args.get('userName'),
+                              args.get('fileCatalogId'))
+    hr_events = []
     events = []
     if raw_events:
         for event in raw_events:
-            events.append({
+            event_json = {
                 'FilePath': event.get('pathName'),
                 'Param1': event.get('param1'),
                 'Param2': event.get('param2'),
@@ -698,16 +701,22 @@ def search_event_command():
                 'Severity': event.get('severity'),
                 'CommandLine': event.get('commandLine'),
                 'ProcessPathName': event.get('processPathName')
-            })
+            }
+            events.append(event_json)
+            hr_event_json = dict(event_json)
+            hr_event_json['Type'] = event_type_to_string(hr_event_json['Type'])
+            hr_event_json['Severity'] = event_severity_to_string(hr_event_json['Severity'])
+            hr_events.append(hr_event_json)
     headers = args.get('headers', EVENT_HEADERS)
     hr_title = "CarbonBlack Protect Event Search"
-    hr = tableToMarkdown(hr_title, events, headers, removeNull=True, headerTransform=pascalToSpace)
+    hr = tableToMarkdown(hr_title, hr_events, headers, removeNull=True, headerTransform=pascalToSpace)
     events = {'CBP.Event(val.ID === obj.ID)': events} if events else None
     return_outputs(hr, events, raw_events)
 
 
 @logger
-def search_event(q=None, limit=None, offset=None, sort=None, group=None):
+def search_event(q=None, limit=None, offset=None, sort=None, group=None, e_type=None, computer_id=None, ip_address=None,
+                 file_name=None, severity=None, user_name=None, file_catalog_id=None):
     """
     Sends the request for file instance, and returns the result json
     :param q: Query to be executed
@@ -715,20 +724,114 @@ def search_event(q=None, limit=None, offset=None, sort=None, group=None):
     :param offset: Offset of the file instances to be fetched
     :param sort: Sort argument for request
     :param group: Group argument for request
+    :param e_type: Event type
+    :param computer_id: Id of computer associated with this event
+    :param ip_address: IP address associated with this event
+    :param file_name: Name of the file associated with this event
+    :param severity: Event severity
+    :param user_name: User name associated with this event
+    :param file_catalog_id: Id of fileCatalog entry associated with this fileRule
     """
     url_params = {
         "limit": limit,
         "offset": offset,
         "sort": sort,
-        "group": group
+        "group": group,
+        "q": q.split('&') if q else []  # handle multi condition queries in the following formats: a&b
     }
-    if q:
-        # handle multi condition queries in the following formats: a&b
-        q = q.split('&')
-        url_params['q'] = q
+    if e_type:
+        url_params['q'].append(f'type:{event_type_to_int(e_type)}')
+    if computer_id:
+        url_params['q'].append(f'computerId:{computer_id}')
+    if ip_address:
+        url_params['q'].append(f'ipAddress:{ip_address}')
+    if file_name:
+        url_params['q'].append(f'fileName:{file_name}')
+    if severity:
+        url_params['q'].append(f'severity:{event_severity_to_int(severity)}')
+    if user_name:
+        url_params['q'].append(f'userName:{user_name}')
+    if file_catalog_id:
+        url_params['q'].append(f'fileCatalogId:{file_catalog_id}')
 
     return http_request('GET', '/event', params=url_params)
 
+
+@logger
+def event_type_to_int(e_type):
+    """
+    Returns type of the event in int format
+    :param e_type: event type in string or int format
+    :return: type of the event in int format
+    """
+    type_dict = {
+        'Server Management': 0,
+        'Session Management': 1,
+        'Computer Management': 2,
+        'Policy Management': 3,
+        'Policy Enforcement': 4,
+        'Discovery': 5,
+        'General Management': 6,
+        'Internal Events': 8
+    }
+    return type_dict.get(e_type, e_type)
+
+
+@logger
+def event_severity_to_int(severity):
+    """
+    Return severity value in int
+    :param severity: severity in string or int
+    :return: severity value in int
+    """
+    severity_dict = {
+        'Critical': 2,
+        'Error': 3,
+        'Warning': 4,
+        'Notice': 5,
+        'Info': 6,
+        'Debug': 7
+    }
+    return severity_dict.get(severity, severity)
+
+
+@logger
+def event_type_to_string(e_type):
+    """
+    Returns event type as string
+    :param e_type: Event type in int
+    :return: event type as string
+    """
+    type_dict = {
+        0: 'Server Management',
+        1: 'Session Management',
+        2: 'Computer Management',
+        3: 'Policy Management',
+        4: 'Policy Enforcement',
+        5: 'Discovery',
+        6: 'General Management',
+        8: 'Internal Events'
+    }
+    return type_dict.get(e_type, e_type)
+
+
+@logger
+def event_severity_to_string(severity):
+    """
+    Returns event severity as string
+    :param severity: Severity of the event
+    :return: event severity as string
+    """
+    severity_dict = {
+        2: 'Critical',
+        3: 'Error',
+        4: 'Warning',
+        5: 'Notice',
+        6: 'Info',
+        7: 'Debug'
+    }
+    return severity_dict.get(severity, severity
+                             )
 
 def search_approval_request_command():
     """

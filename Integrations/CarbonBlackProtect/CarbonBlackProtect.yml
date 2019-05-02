@@ -107,7 +107,8 @@ script:
       required: false
       secret: false
     - default: false
-      description: Id of computer where this file was first seen
+      description: Id of computer where this file was first seen. You can get this
+        by executing cbp-computer-search command
       isArray: false
       name: computerId
       required: false
@@ -705,6 +706,85 @@ script:
         be only one sorting field. Default sort order is ascending (ASC). '
       isArray: false
       name: sort
+      required: false
+      secret: false
+    - auto: PREDEFINED
+      default: false
+      description: |-
+        Event type. Can be one of:
+        0 = Server Management
+        1 = Session Management
+        2 = Computer Management
+        3 = Policy Management
+        4 = Policy Enforcement
+        5 = Discovery
+        6 = General Management
+        8 = Internal Events
+      isArray: false
+      name: type
+      predefined:
+      - Server Management
+      - Session Management
+      - Computer Management
+      - Policy Management
+      - Policy Enforcement
+      - Discovery
+      - General Management
+      - Internal Events
+      required: false
+      secret: false
+    - default: false
+      description: Id of computer associated with this event. You can get this by
+        executing cbp-computer-search command
+      isArray: false
+      name: computerId
+      required: false
+      secret: false
+    - default: false
+      description: IP address associated with this event
+      isArray: false
+      name: ipAddress
+      required: false
+      secret: false
+    - default: false
+      description: Name of the file associated with this event
+      isArray: false
+      name: fileName
+      required: false
+      secret: false
+    - auto: PREDEFINED
+      default: false
+      description: |-
+        Event severity. Can be one of:
+        2 = Critical
+        3 = Error
+        4 = Warning
+        5 = Notice
+        6 = Info
+        7 = Debug
+      isArray: false
+      name: severity
+      predefined:
+      - Critical
+      - Error
+      - Warning
+      - Notice
+      - Info
+      - Debug
+      required: false
+      secret: false
+    - default: false
+      description: User name associated with this event
+      isArray: false
+      name: userName
+      required: false
+      secret: false
+    - default: false
+      description: Id of fileCatalog entry associated with this fileRule. Can be null
+        if file hasn’t been seen on any endpoints yet. You can get this by executing
+        cbp-fileCatalog-search
+      isArray: false
+      name: fileCatalogId
       required: false
       secret: false
     deprecated: false
