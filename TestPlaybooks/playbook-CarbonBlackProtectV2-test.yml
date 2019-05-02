@@ -1566,7 +1566,7 @@ tasks:
     conditions:
     - label: "yes"
       condition:
-      - - operator: containsGeneral
+      - - operator: isEqualString
           left:
             value:
               complex:
@@ -1576,7 +1576,7 @@ tasks:
           right:
             value:
               simple: C:\Program Files (x86)\Bit9\Parity Server\support\ServerInstall-2017522-194921.log
-      - - operator: containsGeneral
+      - - operator: isEqualString
           left:
             value:
               complex:
@@ -1746,7 +1746,7 @@ tasks:
       version: -1
       name: Fetch Incidents
       description: Execute FetchIncident for a given instance
-      scriptName: FetchFromInstance_copy
+      scriptName: FetchFromInstance
       type: regular
       iscommand: false
       brand: ""
