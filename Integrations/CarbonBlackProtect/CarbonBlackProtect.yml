@@ -231,6 +231,24 @@ script:
       name: limit
       required: false
       secret: false
+    - default: false
+      description: Computer name
+      isArray: false
+      name: name
+      required: false
+      secret: false
+    - default: false
+      description: Last known IP address of this computer
+      isArray: false
+      name: ipAddress
+      required: false
+      secret: false
+    - default: false
+      description: MAC address of adapter used to connect to the CB Protection Server
+      isArray: false
+      name: macAddress
+      required: false
+      secret: false
     deprecated: false
     description: 'Search for computers. For more information, see the Carbon Black
       documentation: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#computer'

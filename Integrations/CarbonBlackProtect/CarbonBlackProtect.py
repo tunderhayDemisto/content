@@ -375,7 +375,7 @@ def search_file_catalog(q=None, limit=None, offset=None, sort=None, group=None, 
         hash_type = get_hash_type(hash_value)
         if hash_type != 'Unknown':
             url_params['q'].append(f'{hash_type}:{hash_value}')
-    demisto.info(url_params)
+
     return http_request('GET', '/fileCatalog', params=url_params)
 
 
@@ -427,8 +427,8 @@ def search_computer_command():
     :return: EntryObject of the computer
     """
     args = demisto.args()
-    raw_computers = search_computer(args.get('query'), args.get('limit'), args.get('offset'),
-                                    args.get('sort'), args.get('group'))
+    raw_computers = search_computer(args.get('query'), args.get('limit'), args.get('offset'), args.get('sort'),
+                                    args.get('group'), args.get('name'), args.get('ipAddress'), args.get('macAddress'))
     headers = args.get('headers', COMPUTER_HEADERS)
     computers = []
     for computer in raw_computers:
@@ -451,7 +451,7 @@ def search_computer_command():
 
 
 @logger
-def search_computer(q=None, limit=None, offset=None, sort=None, group=None):
+def search_computer(q=None, limit=None, offset=None, sort=None, group=None, name=None, ip_address=None, mac=None):
     """
     Sends the request for file catalog, and returns the result json
     :param q: Query to be executed
@@ -459,18 +459,24 @@ def search_computer(q=None, limit=None, offset=None, sort=None, group=None):
     :param offset: Offset of the computers to be fetched
     :param sort: Sort argument for request
     :param group: Group argument for request
+    :param name: Computer name
+    :param ip_address: Last known IP address of this computer
+    :param mac: MAC address of adapter used to connect to the CB Protection Server
     :return: Computer response json
     """
     url_params = {
         "limit": limit,
         "offset": offset,
         "sort": sort,
-        "group": group
+        "group": group,
+        "q": q.split('&') if q else []  # handle multi condition queries in the following formats: a&b
     }
-    if q:
-        # handle multi condition queries in the following formats: a&b
-        q = q.split('&')
-        url_params['q'] = q
+    if name:
+        url_params['q'].append(f'name:{name}')
+    if ip_address:
+        url_params['q'].append(f'ipAddress:{ip_address}')
+    if mac:
+        url_params['q'].append(f'macAddress:{mac}')
 
     return http_request('GET', '/Computer', params=url_params)
 
@@ -1864,7 +1870,7 @@ def main():
             get_computer_command()
         elif demisto.command() == 'cbp-connector-get':
             get_connector_command()
-        elif demisto.command() == 'cbp-connector-sequarch':
+        elif demisto.command() == 'cbp-connector-search':
             search_connector_command()
         elif demisto.command() == 'cbp-approvalRequest-resolve':
             resolve_approval_request_command()
