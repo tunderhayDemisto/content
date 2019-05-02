@@ -1354,7 +1354,8 @@
             "playbookID": "Detonate File From URL - ANYRUN - Test"
         },
         {
-            "playbookID": "FormattingPerformance - Test"
+            "playbookID": "FormattingPerformance - Test",
+            "fromversion": "4.5.0"
         }
     ],
     "skipped_tests": {
