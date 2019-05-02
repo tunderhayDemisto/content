@@ -94,6 +94,66 @@ script:
       name: sort
       required: false
       secret: false
+    - default: false
+      description: Name of the file under which this unique hash was first seen
+      isArray: false
+      name: fileName
+      required: false
+      secret: false
+    - default: false
+      description: Type of the file
+      isArray: false
+      name: fileType
+      required: false
+      secret: false
+    - default: false
+      description: Id of computer where this file was first seen
+      isArray: false
+      name: computerId
+      required: false
+      secret: false
+    - auto: PREDEFINED
+      default: false
+      description: |-
+        Threat of this file. Can be one of:
+        -1=Unknown
+        0=Clean
+        50=Potential risk
+        100=Malicious
+      isArray: false
+      name: threat
+      predefined:
+      - Unknown
+      - Clean
+      - Potential risk
+      - Malicious
+      required: false
+      secret: false
+    - auto: PREDEFINED
+      default: false
+      description: |-
+        File state of this hash. Can be one of:
+        1=Unapproved
+        2=Approved
+        3=Banned
+        4=Approved by Policy
+        5=Banned by Policy
+      isArray: false
+      name: fileState
+      predefined:
+      - Unapproved
+      - Approved
+      - Banned
+      - Approved by Policy
+      - Banned by Polic
+      required: false
+      secret: false
+    - default: false
+      description: Hash of the file
+      isArray: false
+      name: hash
+      required: false
+      secret: false
     deprecated: false
     description: 'Search for file catalogs. See more: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#filecatalog'
     execution: false

@@ -412,7 +412,7 @@ tasks:
       brand: ""
     nexttasks:
       "yes":
-      - "6"
+      - "51"
     separatecontext: false
     conditions:
     - label: "yes"
@@ -1550,10 +1550,10 @@ tasks:
     ignoreworker: false
   "45":
     id: "45"
-    taskid: 1f429da4-647d-4da8-87f1-ece3f89014cd
+    taskid: 3b1a21f9-f790-4842-8ee9-317e2abf6dd5
     type: condition
     task:
-      id: 1f429da4-647d-4da8-87f1-ece3f89014cd
+      id: 3b1a21f9-f790-4842-8ee9-317e2abf6dd5
       version: -1
       name: Verify context
       type: condition
@@ -1566,7 +1566,7 @@ tasks:
     conditions:
     - label: "yes"
       condition:
-      - - operator: isEqualString
+      - - operator: containsGeneral
           left:
             value:
               complex:
@@ -1576,7 +1576,7 @@ tasks:
           right:
             value:
               simple: C:\Program Files (x86)\Bit9\Parity Server\support\ServerInstall-2017522-194921.log
-      - - operator: isEqualString
+      - - operator: containsGeneral
           left:
             value:
               complex:
@@ -1746,7 +1746,7 @@ tasks:
       version: -1
       name: Fetch Incidents
       description: Execute FetchIncident for a given instance
-      scriptName: FetchFromInstance
+      scriptName: FetchFromInstance_copy
       type: regular
       iscommand: false
       brand: ""
@@ -1764,6 +1764,86 @@ tasks:
         "position": {
           "x": 265,
           "y": 1240
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+  "51":
+    id: "51"
+    taskid: 25640ffa-bd4f-41f7-8e0e-6b4f0fb77dba
+    type: regular
+    task:
+      id: 25640ffa-bd4f-41f7-8e0e-6b4f0fb77dba
+      version: -1
+      name: Search file catalog using specific query args
+      description: 'Search for file catalogs. See more: https://developer.carbonblack.com/reference/enterprise-protection/8.0/rest-api/#filecatalog'
+      script: CarbonBlackProtectionV2|||cbp-fileCatalog-search
+      type: regular
+      iscommand: true
+      brand: CarbonBlackProtectionV2
+    nexttasks:
+      '#none#':
+      - "52"
+    scriptarguments:
+      computerId:
+        simple: "1"
+      fileName:
+        simple: dfsvc.exe
+      fileState:
+        simple: Unapproved
+      fileType:
+        simple: Unknown
+      group: {}
+      hash:
+        simple: 88a01ee91d491ccc582a97d74f63cd7f
+      limit: {}
+      offset: {}
+      query: {}
+      sort: {}
+      threat: {}
+    separatecontext: false
+    view: |-
+      {
+        "position": {
+          "x": 930,
+          "y": 680
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+  "52":
+    id: "52"
+    taskid: 467b6500-f920-40c2-84f4-ecce3e0183a2
+    type: condition
+    task:
+      id: 467b6500-f920-40c2-84f4-ecce3e0183a2
+      version: -1
+      name: Verify context
+      type: condition
+      iscommand: false
+      brand: ""
+    nexttasks:
+      "yes":
+      - "6"
+    separatecontext: false
+    conditions:
+    - label: "yes"
+      condition:
+      - - operator: isEqualString
+          left:
+            value:
+              simple: File.ID
+            iscontext: true
+          right:
+            value:
+              simple: "78"
+    view: |-
+      {
+        "position": {
+          "x": 930,
+          "y": 865
         }
       }
     note: false

@@ -308,8 +308,10 @@ def search_file_catalog_command():
     :return: EntryObject of the file catalog
     """
     args = demisto.args()
-    raw_catalogs = search_file_catalog(args.get('query'), args.get('limit'), args.get('offset'),
-                                       args.get('sort'), args.get('group'))
+    raw_catalogs = search_file_catalog(args.get('query'), args.get('limit'), args.get('offset'), args.get('sort'),
+                                       args.get('group'), args.get('fileName'), args.get('fileType'),
+                                       args.get('computerId'), args.get('threat'), args.get('fileState'),
+                                       args.get('hash'))
     headers = args.get('headers', FILE_CATALOG_HEADERS)
     catalogs = []
     for catalog in raw_catalogs:
@@ -334,7 +336,8 @@ def search_file_catalog_command():
 
 
 @logger
-def search_file_catalog(q=None, limit=None, offset=None, sort=None, group=None):
+def search_file_catalog(q=None, limit=None, offset=None, sort=None, group=None, file_name=None, file_type=None,
+                        computer_id=None, threat=None, file_state=None, hash_value=None):
     """
     Sends the request for file catalog, and returns the result json
     :param q: Query to be executed
@@ -342,20 +345,80 @@ def search_file_catalog(q=None, limit=None, offset=None, sort=None, group=None):
     :param offset: Offset of the catalogs to be fetched
     :param sort: Sort argument for request
     :param group: Group argument for request
+    :param file_name: Name of the file under which this unique hash was first seen
+    :param file_type: Type of the file
+    :param computer_id: Id of computer where this file was first seen
+    :param threat: Threat of this file
+    :param file_state: File state of this hash
+    :param hash_value: Hash of the file
     :return: File catalog response json
     """
+
     url_params = {
         "limit": limit,
         "offset": offset,
         "sort": sort,
-        "group": group
+        "group": group,
+        "q": q.split('&') if q else []  # handle multi condition queries in the following formats: a&b
     }
-    if q:
-        # handle multi condition queries in the following formats: a&b
-        q = q.split('&')
-        url_params['q'] = q
-
+    if file_name:
+        url_params['q'].append(f'fileName:{file_name}')
+    if file_type:
+        url_params['q'].append(f'fileType:{file_type}')
+    if computer_id:
+        url_params['q'].append(f'computerId:{computer_id}')
+    if threat:
+        url_params['q'].append(f'threat:{file_catalog_threat_to_int(threat)}')
+    if file_state:
+        url_params['q'].append(f'fileState:{file_catalog_file_state_to_int(file_state)}')
+    if hash_value:
+        hash_type = get_hash_type(hash_value)
+        if hash_type != 'Unknown':
+            url_params['q'].append(f'{hash_type}:{hash_value}')
+    demisto.info(url_params)
     return http_request('GET', '/fileCatalog', params=url_params)
+
+
+@logger
+def file_catalog_threat_to_int(threat):
+    """
+    Threat of this file. Can be one of:
+    -1=Unknown
+    0=Clean
+    50=Potential risk
+    100=Malicious
+    :param threat:
+    :return:
+    """
+    threat_dict = {
+        'Unknown': -1,
+        'Clean': 0,
+        'Potential risk': 50,
+        'Malicious': 100
+    }
+    return threat_dict.get(threat, threat)
+
+
+@logger
+def file_catalog_file_state_to_int(file_state):
+    """
+    File state of this hash. Can be one of:
+    1=Unapproved
+    2=Approved
+    3=Banned
+    4=Approved by Policy
+    5=Banned by Policy
+    :param file_state: String value of file state
+    :return:
+    """
+    file_state_dict = {
+        'Unapproved': 1,
+        'Approved': 2,
+        'Banned': 3,
+        'Approved by Policy': 4,
+        'Banned by Policy': 5
+    }
+    return file_state_dict.get(file_state, file_state)
 
 
 def search_computer_command():
@@ -1801,7 +1864,7 @@ def main():
             get_computer_command()
         elif demisto.command() == 'cbp-connector-get':
             get_connector_command()
-        elif demisto.command() == 'cbp-connector-search':
+        elif demisto.command() == 'cbp-connector-sequarch':
             search_connector_command()
         elif demisto.command() == 'cbp-approvalRequest-resolve':
             resolve_approval_request_command()
