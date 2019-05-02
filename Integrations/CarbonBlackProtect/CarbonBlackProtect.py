@@ -616,8 +616,8 @@ def search_file_instance_command():
     :return: EntryObject of the file instance
     """
     args = demisto.args()
-    raw_files = search_file_instance(args.get('query'), args.get('limit'), args.get('offset'),
-                                     args.get('sort'), args.get('group'))
+    raw_files = search_file_instance(args.get('query'), args.get('limit'), args.get('offset'), args.get('sort'),
+                                     args.get('group'), args.get('computerId'), args.get('fileName'))
     headers = args.get('headers', FILE_INSTANCE_HEADERS)
     files = []
     if raw_files:
@@ -636,7 +636,7 @@ def search_file_instance_command():
 
 
 @logger
-def search_file_instance(q=None, limit=None, offset=None, sort=None, group=None):
+def search_file_instance(q=None, limit=None, offset=None, sort=None, group=None, computer_id=None, file_name=None):
     """
     Sends the request for file instance, and returns the result json
     :param q: Query to be executed
@@ -644,17 +644,20 @@ def search_file_instance(q=None, limit=None, offset=None, sort=None, group=None)
     :param offset: Offset of the file instances to be fetched
     :param sort: Sort argument for request
     :param group: Group argument for request
+    :param computer_id: Id of computer associated with this fileInstance
+    :param file_name: Name of the file on the agent
     """
     url_params = {
         "limit": limit,
         "offset": offset,
         "sort": sort,
-        "group": group
+        "group": group,
+        "q": q.split('&') if q else []  # handle multi condition queries in the following formats: a&b
     }
-    if q:
-        # handle multi condition queries in the following formats: a&b
-        q = q.split('&')
-        url_params['q'] = q
+    if computer_id:
+        url_params['q'].append(f'computerId:{computer_id}')
+    if file_name:
+        url_params['q'].append(f'fileName:{file_name}')
 
     return http_request('GET', '/fileInstance', params=url_params)
 
